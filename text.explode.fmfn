@@ -1,0 +1,56 @@
+/* 
+Purpose: Splits a string using the delimiter into a list.
+
+Returns: List
+
+Name: text.explode ( theDelimiter; theText )
+
+Parameters: ( theDelimiter ) text
+            ( theText ) text
+
+Dependencies: NONE
+
+References: Modeled after PHP's implode: hhttp://us.php.net/manual/en/function.explode.php
+
+2012-09-12, JPS, Created.
+*/
+
+Let (
+    [
+        //Check for the delimiter
+        delimiterCount = PatternCount ( theText ; theDelimiter );
+        
+        //Get the delimiter length
+        delimiterLength = Length ( theDelimiter ) - 1;
+        
+        //Get the length of the text
+        textLength = Length ( theText );
+        
+        //Get the location of the first delimiter
+        delimiterPosition  = Position ( theText ; theDelimiter ; 1 ; 1 );
+        
+        //Get the first value and trim it
+        firstValue = Trim ( Left ( theText ; delimiterPosition - 1 ));
+        
+        //Get the remaining text
+        remainingText = Trim ( Right ( theText; textLength - delimiterPosition - delimiterLength ))
+
+    ];
+
+    Case (
+        //If theText is empty return nothing
+        IsEmpty ( theText );
+            "";
+        
+        //If theDelimiter is empty return the original string
+        IsEmpty ( theDelimiter );
+            theText;
+        
+        //If there is only a single delimter return the firstValue
+        delimiterCount = 0;
+            theText;
+
+        //Return the values with the provided glue
+        firstValue & ¶ & text.explode ( theDelimiter; remainingText )
+        )
+)

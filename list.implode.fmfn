@@ -1,0 +1,38 @@
+/* 
+Purpose: Joins the values (list) with the provided glue (text).
+
+Returns: Text
+
+Name: list.implode ( glue; values )
+
+Parameters: ( glue ) text
+            ( values ) list = FileMaker List ( return delmited list )
+
+Dependencies: NONE
+
+References: Modeled after PHP's implode: http://us2.php.net/manual/en/function.implode.php
+
+2011-09-20, JPS, Created.
+2012-08-01, JPS, Now strips the last carriage return from the results, by using the result of GetValue (firstValue)
+2012-08-06, JPS, Updated the empty case stament to use valueCount
+*/
+
+Let (
+    [
+        countValues = ValueCount ( values );
+        firstValue = GetValue ( values; 1)
+    ];
+
+    Case (
+        //If values is empty return and empty string
+        countValues = 0;
+            "";
+        
+        //If there is only a single value return the value
+        countValues = 1;
+            firstValue;
+
+        //Return the values with the provided glue
+        firstValue & glue & list.implode ( glue; RightValues ( values; countValues - 1 ))
+        )
+)

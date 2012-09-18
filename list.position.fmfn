@@ -1,0 +1,11 @@
+/*
+ * =====================================================
+ * list.position ( values; search )
+ * 
+ * RETURNS:    (number) numerical position of the supplied value
+ * DEPS:       none
+ * NOTES:  https://github.com/petrowsky/fmpfunctions/blob/master/list.position.fmfn    
+ * =====================================================
+ */
+
+Position ( Substitute ( Filter ( Substitute ( ¶& values &¶ ; ¶& search &¶ ; "¶•¶" ) ; "•¶" ) ; ¶ ; "|" ) ; "•" ; 1 ; 1 ) - 1

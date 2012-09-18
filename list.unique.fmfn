@@ -1,0 +1,54 @@
+/* 
+Purpose: Removes duplicate values from the list. Works for value lists that have 6000 or less items.
+
+Returns: Text
+
+Name: list.unique ( values; caseSensitive )
+
+Parameters: ( values ) list = FileMaker List ( return delimited list )
+            ( caseSensitive ) boolean
+
+Dependencies: NONE
+
+2011-08-24, JPS, Created.
+2011-09-23, JPS, Updated to work with lists were only the last lines are
+duplicated.
+2012-09-17, JPS, Rewrote, the function would not work properly with lists that
+had lines with characters that were inside others (e.g. 1 and 11).
+*/
+
+Let (
+    [
+        values = Trim ( values );
+        theCount = ValueCount ( values );
+        firstValue = LeftValues ( values ; 1 );
+        //Removed the trailing ¶
+        firstValue = Left ( firstValue; Length ( firstValue ) - 1 );
+        
+        //Check to see of the value is in the global list
+        duplicate = If ( FilterValues ( $$VALUES.UNIQUE.LIST ; firstValue ); True );
+        
+        //If it is not a duplicate add to list
+        $$VALUES.UNIQUE.LIST = If ( duplicate; $$VALUES.UNIQUE.LIST; List ( $$VALUES.UNIQUE.LIST; firstValue));
+        
+        remainingValues = RightValues ( values ; theCount - 1 )
+        
+    ];
+
+    Case (
+        theCount = 0;
+            "?";
+
+        theCount = 1;
+            Let (
+                [
+                    theList = $$VALUES.UNIQUE.LIST;
+                    //Clear the global
+                    $$VALUES.UNIQUE.LIST = ""
+                ];
+                theList);
+        
+        //Default
+            list.unique ( remainingValues; caseSensitive )
+    )
+)

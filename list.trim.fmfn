@@ -1,0 +1,39 @@
+/* 
+Purpose: Remove blank list items.
+
+Returns: Text
+
+Name: list.trim ( values )
+
+Parameters: ( values ) list = FileMaker List ( return delmited list )
+
+Dependencies: NONE
+
+2011-08-24, JPS, Created.
+2011-10-19, JPS, Empty list now retuns "" instead of ?
+*/
+
+Let (
+    [
+        values = Trim ( values );
+        len = Length ( values );
+        count = ValueCount ( values )
+    ];
+
+    Case (
+        count = 0;
+            "";
+
+        PatternCount ( values; "¶¶" ) > 0;
+            list.trim ( Substitute ( values; "¶¶"; ¶ ));
+        
+        Right ( values ; 1 ) = ¶;
+            list.trim ( Left ( values ; len - 1 ) );
+        
+        Left ( values ; 1 ) = ¶;
+            list.trim ( Right ( values ; len - 1 ) );
+            
+        //ELSE
+            values
+    )
+)

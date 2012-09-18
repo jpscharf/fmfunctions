@@ -1,0 +1,41 @@
+/* 
+Purpose: Returns a list of values that are in list1 but not in list2.
+
+Returns: Text
+
+Name: list.diff ( list1; list2 )
+
+Parameters: ( list1 ) list = FileMaker List ( return delmited list )
+            ( list2 ) list = FileMaker List ( return delmited list )
+
+Dependencies: NONE
+
+References: Modeled after PHP's array_diff: http://www.php.net/manual/en/function.array-diff.php
+
+2011-09-16 JPS, Created.
+*/
+
+Let (
+    [
+        list1Size = ValueCount ( list1 );
+        
+        firstValue = GetValue ( list1; 1);
+        
+        duplicateValues = FilterValues ( list1 ; list2 );
+
+        firstIsDuplicate = FilterValues ( firstValue; list2)
+    ];
+
+    Case (
+        //If list2 is empty, or there are no duplicate values return list1
+        IsEmpty ( list2 ) or IsEmpty ( duplicateValues );
+            list1;
+
+        //If the first value of list1 is not in list2 keep and continue
+        IsEmpty ( firstIsDuplicate );
+            firstValue & ¶ & list.diff ( RightValues ( list1; list1size - 1 ); list2);
+            
+        //Since the first value is a duplicate, continue without it
+            list.diff ( RightValues ( list1; list1size - 1 ); list2)
+        )
+)
