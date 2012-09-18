@@ -1,12 +1,12 @@
 /* 
-Purpose: Removes duplicate values from the list. Works for value lists that have 6000 or less items.
+Purpose: Removes duplicate values from the list.
 
 Returns: Text
 
 Name: list.unique ( values; caseSensitive )
 
 Parameters: ( values ) list = FileMaker List ( return delimited list )
-            ( caseSensitive ) boolean
+            ( caseSensitive ) boolean **DEPRECIATED**
 
 Dependencies: NONE
 
