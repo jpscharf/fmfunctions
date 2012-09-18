@@ -15,6 +15,7 @@ Dependencies: NONE
 duplicated.
 2012-09-17, JPS, Rewrote, the function would not work properly with lists that
 had lines with characters that were inside others (e.g. 1 and 11).
+2012-09-18, JPS, caseSensitive has been depreciated, left in place for backwards compatibility.
 */
 
 Let (
@@ -22,16 +23,15 @@ Let (
         values = Trim ( values );
         theCount = ValueCount ( values );
         firstValue = LeftValues ( values ; 1 );
-        //Removed the trailing ¶
-        firstValue = Left ( firstValue; Length ( firstValue ) - 1 );
         
         //Check to see of the value is in the global list
-        duplicate = If ( FilterValues ( $$VALUES.UNIQUE.LIST ; firstValue ); True );
+        duplicate = If ( IsEmpty ( FilterValues ( $$VALUES.UNIQUE.LIST ; firstValue )); False; True );
         
         //If it is not a duplicate add to list
-        $$VALUES.UNIQUE.LIST = If ( duplicate; $$VALUES.UNIQUE.LIST; List ( $$VALUES.UNIQUE.LIST; firstValue));
+        $$VALUES.UNIQUE.LIST = If ( duplicate; $$VALUES.UNIQUE.LIST; $$VALUES.UNIQUE.LIST & firstValue );
         
-        remainingValues = RightValues ( values ; theCount - 1 )
+        remainingValues = RightValues ( values ; theCount - 1 );
+        remainingValues = Left ( remainingValues; Length ( remainingValues ) - 1 )
         
     ];
 
