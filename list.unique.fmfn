@@ -16,6 +16,7 @@ duplicated.
 2012-09-17, JPS, Complete rewrite, the function would not work properly with lists that
 had lines with characters that were inside others (e.g. 1 and 11).
 2012-09-18, JPS, caseSensitive has been depreciated, left in place for backwards compatibility.
+2012-09-20, JPS, Renamed the global variable ($$VALUES.UNIQUE.LIST), to use a global namespace.
 */
 
 Let (
@@ -25,10 +26,10 @@ Let (
         firstValue = LeftValues ( values ; 1 );
         
         //Check to see of the value is in the global list
-        duplicate = If ( IsEmpty ( FilterValues ( $$VALUES.UNIQUE.LIST ; firstValue )); False; True );
+        duplicate = If ( IsEmpty ( FilterValues ( $$FUNCTION.UNIQUE.LIST.RESULTS ; firstValue )); False; True );
         
         //If it is not a duplicate add to list
-        $$VALUES.UNIQUE.LIST = If ( duplicate; $$VALUES.UNIQUE.LIST; $$VALUES.UNIQUE.LIST & firstValue );
+        $$FUNCTION.UNIQUE.LIST.RESULTS = If ( duplicate; $$FUNCTION.UNIQUE.LIST.RESULTS; $$FUNCTION.UNIQUE.LIST.RESULTS & firstValue );
         
         remainingValues = RightValues ( values ; theCount - 1 );
         remainingValues = Left ( remainingValues; Length ( remainingValues ) - 1 )
@@ -42,9 +43,9 @@ Let (
         theCount = 1;
             Let (
                 [
-                    theList = $$VALUES.UNIQUE.LIST;
+                    theList = $$FUNCTION.UNIQUE.LIST.RESULTS;
                     //Clear the global
-                    $$VALUES.UNIQUE.LIST = ""
+                    $$FUNCTION.UNIQUE.LIST.RESULTS = ""
                 ];
                 theList);
         
