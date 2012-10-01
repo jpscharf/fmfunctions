@@ -22,3 +22,6 @@
 
 #####[text.pathsafe ( text )] (https://github.com/jpscharf/fmfunctions/blob/master/text.pathsafe.fmfn)
 `Converts a text string to a path safe string.`
+
+#####[text.split ( theText; theLength )] (https://github.com/jpscharf/fmfunctions/blob/master/text.split.fmfn)
+`Converts a string into a list, using the provided length.`
