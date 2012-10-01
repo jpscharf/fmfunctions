@@ -1,0 +1,61 @@
+/* 
+Purpose: Converts a string into a list, using the provided length.
+
+Returns: List
+
+Name: text.split ( theText; theLength )
+
+Parameters: ( theText ) text
+            ( theLength ) text [defaults to one]
+
+Dependencies: NONE
+
+References: Modeled after PHP's str_split: http://www.php.net/manual/en/function.str-split.php
+
+2012-10-01, JPS, Created.
+*/
+
+Let (
+    [
+        
+        // Check theLength
+        theLength = If ( theLength > 1; Floor ( theLength ); 1 );
+
+        //Get the length of the text
+        textLength = Length ( theText );
+        
+        //Get the first value and trim it
+        firstValue = If ( textLength >= theLength;  Trim ( Left ( theText ; theLength )));
+        
+        //Save the current value
+        $$FUNCTION.SPLIT.TEXT.RESULTS = List ( $$FUNCTION.SPLIT.TEXT.RESULTS; firstValue );
+        
+        //Get the remaining text
+        remainingText = Trim ( Right ( theText; textLength - theLength ))
+
+    ];
+
+    Case (
+        //If theText is empty return nothing
+        IsEmpty ( theText ) and IsEmpty ( $$FUNCTION.SPLIT.TEXT.RESULTS );
+            "";
+        
+        //If the text is smaller than theLength return the text
+        textLength < theLength and IsEmpty ( $$FUNCTION.SPLIT.TEXT.RESULTS );
+            theText;
+        
+        //If the remaining text is smaller than the length, return the results
+        textLength < theLength;
+            Let (
+                    [
+                        theList = $$FUNCTION.SPLIT.TEXT.RESULTS;
+                        //Clear the global
+                        $$FUNCTION.SPLIT.TEXT.RESULTS = ""
+                    ];
+                    List ( theList; theText )
+                );
+        
+        //Continue parsing
+        text.split ( remainingText; theLength )
+        )
+)
