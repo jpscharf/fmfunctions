@@ -1,10 +1,10 @@
 /*
  * =====================================================
  * list.position ( values; search )
- * 
- * RETURNS:    	(number) numerical position of the supplied value
- * DEPS:       	none
- * NOTES:  		https://github.com/petrowsky/fmpfunctions/blob/master/list.position.fmfn    
+ *
+ * RETURNS:     (number) numerical position of the supplied value
+ * DEPS:        none
+ * NOTES:       https://github.com/petrowsky/fmpfunctions/blob/master/list.position.fmfn
  * =====================================================
  */
 
