@@ -13,6 +13,7 @@ Dependencies: NONE
 References: Modeled after PHP's array_diff: http://www.php.net/manual/en/function.array-diff.php
 
 2011-09-16 JPS, Created.
+2012-10-02, Re-wrote to use a global variable to increase the recursion limit.
 */
 
 Let (
@@ -23,19 +24,32 @@ Let (
 
         duplicateValues = FilterValues ( list1 ; list2 );
 
-        firstIsDuplicate = FilterValues ( firstValue; list2 )
+        firstIsDuplicate = Length ( FilterValues ( firstValue; list2 )) > 0;
+
+        remainingValuesList1 = RightValues ( list1; ValueCount ( list1 ) - 1 );
+
+        //If the first value of list1 is not in list2 keep and continue
+        $$FUNCTION.DIFF.LIST.RESULTS = If ( firstIsDuplicate; $$FUNCTION.DIFF.LIST.RESULTS; List ( $$FUNCTION.DIFF.LIST.RESULTS; firstValue ))
+
     ];
 
     Case (
         //If list2 is empty, or there are no duplicate values return list1
-        IsEmpty ( list2 ) or IsEmpty ( duplicateValues );
+        IsEmpty ( list2 ) or IsEmpty ( duplicateValues ) and IsEmpty ( $$FUNCTION.DIFF.LIST.RESULTS );
             list1;
 
-        //If the first value of list1 is not in list2 keep and continue
-        IsEmpty ( firstIsDuplicate );
-            firstValue & ¶ & list.diff ( RightValues ( list1; list1size - 1 ); list2 );
+        //If there are no remaining duplicate values, return the list
+        IsEmpty ( duplicateValues );
+            Let (
+                [
+                    theList = $$FUNCTION.DIFF.LIST.RESULTS;
+                    //Clear the global
+                    $$FUNCTION.DIFF.LIST.RESULTS = ""
+                ];
+                List ( theList; remainingValuesList1 )
+            );
 
-        //Since the first value is a duplicate, continue without it
-            list.diff ( RightValues ( list1; list1size - 1 ); list2 )
+        //Continue to the next value
+            list.diff ( remainingValuesList1; list2 )
         )
 )

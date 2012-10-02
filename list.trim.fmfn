@@ -1,4 +1,4 @@
-/* 
+/*
 Purpose: Remove blank list items.
 
 Returns: Text
@@ -10,7 +10,7 @@ Parameters: ( values ) list = FileMaker List ( return delmited list )
 Dependencies: NONE
 
 2011-08-24, JPS, Created.
-2011-10-19, JPS, Empty list now retuns "" instead of ?
+2011-10-19, JPS, Empty list now returns "" instead of ?
 */
 
 Let (
@@ -26,13 +26,13 @@ Let (
 
         PatternCount ( values; "¶¶" ) > 0;
             list.trim ( Substitute ( values; "¶¶"; ¶ ));
-        
+
         Right ( values ; 1 ) = ¶;
             list.trim ( Left ( values ; len - 1 ) );
-        
+
         Left ( values ; 1 ) = ¶;
             list.trim ( Right ( values ; len - 1 ) );
-            
+
         //ELSE
             values
     )
