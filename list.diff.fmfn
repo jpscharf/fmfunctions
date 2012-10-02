@@ -19,11 +19,11 @@ Let (
     [
         list1Size = ValueCount ( list1 );
         
-        firstValue = GetValue ( list1; 1);
+        firstValue = GetValue ( list1; 1 );
         
         duplicateValues = FilterValues ( list1 ; list2 );
 
-        firstIsDuplicate = FilterValues ( firstValue; list2)
+        firstIsDuplicate = FilterValues ( firstValue; list2 )
     ];
 
     Case (
@@ -33,9 +33,9 @@ Let (
 
         //If the first value of list1 is not in list2 keep and continue
         IsEmpty ( firstIsDuplicate );
-            firstValue & ¶ & list.diff ( RightValues ( list1; list1size - 1 ); list2);
+            firstValue & ¶ & list.diff ( RightValues ( list1; list1size - 1 ); list2 );
             
         //Since the first value is a duplicate, continue without it
-            list.diff ( RightValues ( list1; list1size - 1 ); list2)
+            list.diff ( RightValues ( list1; list1size - 1 ); list2 )
         )
 )
