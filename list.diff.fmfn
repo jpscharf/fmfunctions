@@ -1,4 +1,4 @@
-/* 
+/*
 Purpose: Returns a list of values that are in list1 but not in list2.
 
 Returns: Text
@@ -18,9 +18,9 @@ References: Modeled after PHP's array_diff: http://www.php.net/manual/en/functio
 Let (
     [
         list1Size = ValueCount ( list1 );
-        
+
         firstValue = GetValue ( list1; 1 );
-        
+
         duplicateValues = FilterValues ( list1 ; list2 );
 
         firstIsDuplicate = FilterValues ( firstValue; list2 )
@@ -34,7 +34,7 @@ Let (
         //If the first value of list1 is not in list2 keep and continue
         IsEmpty ( firstIsDuplicate );
             firstValue & ¶ & list.diff ( RightValues ( list1; list1size - 1 ); list2 );
-            
+
         //Since the first value is a duplicate, continue without it
             list.diff ( RightValues ( list1; list1size - 1 ); list2 )
         )
