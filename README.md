@@ -14,7 +14,7 @@
 #####[list.trim ( values )] (https://github.com/jpscharf/fmfunctions/blob/master/list.trim.fmfn)
 `Remove blank list items.`
 
-#####[list.unique ( values; caseSensitive )] (https://github.com/jpscharf/fmfunctions/blob/master/list.unique.fmfn)
+#####[list.unique ( values )] (https://github.com/jpscharf/fmfunctions/blob/master/list.unique.fmfn)
 `Removes duplicate values from the list.`
 
 #####[text.explode ( theDelimiter; theText )] (https://github.com/jpscharf/fmfunctions/blob/master/text.explode.fmfn)
