@@ -1,11 +1,12 @@
-/*
+/* 
 Purpose: Removes duplicate values from the list.
 
 Returns: Text
 
-Name: list.unique ( values )
+Name: list.unique ( values; caseSensitive )
 
 Parameters: ( values ) list = FileMaker List ( return delimited list )
+            ( caseSensitive ) boolean **DEPRECIATED**
 
 Dependencies: NONE
 
@@ -16,7 +17,6 @@ duplicated.
 had lines with characters that were inside others (e.g. 1 and 11).
 2012-09-18, JPS, caseSensitive has been depreciated, left in place for backwards compatibility.
 2012-09-20, JPS, Renamed the global variable ($$VALUES.UNIQUE.LIST), to use a global namespace.
-2012-10-02, JPS, Completely removed caseSenitive.
 */
 
 Let (
@@ -24,16 +24,16 @@ Let (
         values = Trim ( values );
         theCount = ValueCount ( values );
         firstValue = LeftValues ( values ; 1 );
-
+        
         //Check to see of the value is in the global list
         duplicate = If ( IsEmpty ( FilterValues ( $$FUNCTION.UNIQUE.LIST.RESULTS ; firstValue )); False; True );
-
+        
         //If it is not a duplicate add to list
         $$FUNCTION.UNIQUE.LIST.RESULTS = If ( duplicate; $$FUNCTION.UNIQUE.LIST.RESULTS; $$FUNCTION.UNIQUE.LIST.RESULTS & firstValue );
-
+        
         remainingValues = RightValues ( values ; theCount - 1 );
         remainingValues = Left ( remainingValues; Length ( remainingValues ) - 1 )
-
+        
     ];
 
     Case (
@@ -48,8 +48,8 @@ Let (
                     $$FUNCTION.UNIQUE.LIST.RESULTS = ""
                 ];
                 theList);
-
+        
         //Default
-            list.unique ( remainingValues )
+            list.unique ( remainingValues; caseSensitive )
     )
 )
