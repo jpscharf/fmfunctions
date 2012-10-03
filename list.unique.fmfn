@@ -16,7 +16,7 @@ duplicated.
 had lines with characters that were inside others (e.g. 1 and 11).
 2012-09-18, JPS, caseSensitive has been depreciated, left in place for backwards compatibility.
 2012-09-20, JPS, Renamed the global variable ($$VALUES.UNIQUE.LIST), to use a global namespace.
-2012-10-02, JPS, Completely removed caseSenitive.
+2012-10-02, JPS, Completely removed caseSensitive.
 */
 
 Let (
