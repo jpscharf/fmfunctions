@@ -1,4 +1,4 @@
-/* 
+/*
 Purpose: Converts a text string to a path safe string.
 
 Returns: Text

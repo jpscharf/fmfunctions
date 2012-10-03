@@ -1,4 +1,4 @@
-/* 
+/*
 Purpose: Removes duplicate values from the list.
 
 Returns: Text
@@ -24,16 +24,16 @@ Let (
         values = Trim ( values );
         theCount = ValueCount ( values );
         firstValue = LeftValues ( values ; 1 );
-        
+
         //Check to see of the value is in the global list
         duplicate = If ( IsEmpty ( FilterValues ( $$FUNCTION.UNIQUE.LIST.RESULTS ; firstValue )); False; True );
-        
+
         //If it is not a duplicate add to list
         $$FUNCTION.UNIQUE.LIST.RESULTS = If ( duplicate; $$FUNCTION.UNIQUE.LIST.RESULTS; $$FUNCTION.UNIQUE.LIST.RESULTS & firstValue );
-        
+
         remainingValues = RightValues ( values ; theCount - 1 );
         remainingValues = Left ( remainingValues; Length ( remainingValues ) - 1 )
-        
+
     ];
 
     Case (
@@ -48,7 +48,7 @@ Let (
                     $$FUNCTION.UNIQUE.LIST.RESULTS = ""
                 ];
                 theList);
-        
+
         //Default
             list.unique ( remainingValues; caseSensitive )
     )

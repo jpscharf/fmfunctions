@@ -5,7 +5,7 @@ Returns: Text
 
 Name: list.trim ( values )
 
-Parameters: ( values ) list = FileMaker List ( return delmited list )
+Parameters: ( values ) list = FileMaker List ( return delimited list )
 
 Dependencies: NONE
 
