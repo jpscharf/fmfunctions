@@ -1,0 +1,18 @@
+/*
+Purpose: Will determine if a value exists in the provided list
+
+Returns: Text
+
+Name: list.in_list ( needle; haystack )
+
+Parameters: ( needle ) text = string to search for in the provided haystack
+            ( haystack ) list = FileMaker List ( return delimited list )
+
+Dependencies: NONE
+
+References: Modeled after PHP's in_array: http://us1.php.net/manual/en/function.in-array.php
+
+2012-10-10, JPS, Created.
+*/
+
+ValueCount ( FilterValues ( needle ; haystack )) > 0

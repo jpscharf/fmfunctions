@@ -1,0 +1,41 @@
+/*
+
+-- Conception Phase --
+Maybe, just build a regular expression custom function?
+
+Purpose: Takes the provided text and formats it with the provided format.
+
+Returns: List
+
+Name: text.split ( theText; theFormat )
+
+Parameters: ( theText ) text
+            ( theFormat ) text
+
+            Format Guidelines
+                Numbers: #asas
+                Uppercase: Xssssss
+                Lowercase: x
+                Alphanumeric:
+
+            Additional Guidlines:
+                Zero or More: *
+                One or More: *
+
+            Format Tags
+                Phone: (###) ###-####
+                SSN: ###-##-####
+                E-Mail: *+@*+.*+
+
+            Examples
+                Phone Number:       (###) ###-####  ->  5555152234      ->  (555) 515-2234
+                SSN:                ###-##-####     ->  111-22-3333     ->  111-22-3333
+                Alpha-numeric code: XX#####x##X     ->  aa12345A67A     ->  AA12345a67A
+
+
+Dependencies: NONE
+
+References: Modeled after PHP's str_split: http://www.php.net/manual/en/function.str-split.php
+
+2012-10-01, JPS, Created.
+*/
