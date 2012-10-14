@@ -23,6 +23,15 @@ Let (
 // substitution for constant expressions - i.e. submit RFC822 and away-ish you go - u still need to add timezone stuff to end afterwards...
 _f = Substitute (_f ; ["RFC822" ; "D, d M y H:i:s"]; ["RSS"; "D, d M Y H:i:s"]);
 
+    //Setup Special Formats
+    formatRFC2822 = "D, d M y H:i:s";
+    //formatISO8601 = "o-d-m\"T\"";
+    //Seconds since Unix Epoch (January 1 1970 00:00:00 GMT)
+    //formatUnixEpoch = "";
+
+
+theFormat = Substitute ( theFormat; )
+
 _c = Left(_f;1) ;
 _lf = Length(_f);
 _f = Right(_f; _lf-1);
