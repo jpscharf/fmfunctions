@@ -13,6 +13,9 @@ Dependencies: NONE
 References: Modeled after PHP's str_split: http://www.php.net/manual/en/function.date.php
             Orginal FormatTimestamp by Thomas Seidler (http://www.briandunning.com/cf/1017)
 
+Notes:  Does not provide full PHP date functionality, the following format chracters are ignored:
+        B - Swatch Internet time, u - microseconds, or any of the timezone formatting ( e, I, O, P, T, Z )
+
 2012-10-14, JPS, Created from FormatTimestamp.
 */
 
