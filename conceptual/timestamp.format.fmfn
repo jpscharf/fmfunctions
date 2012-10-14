@@ -1,12 +1,19 @@
-//Based upon http://www.briandunning.com/cf/1017
+/*
+Purpose: Returns the provided timestamp in the format provided.
 
-/* wanted a standards based function for this - based on http://uk3.php.net/manual/en/function.date.php
+Returns: Text
 
-_ts - timestamp
-_f - format string
+Name: timestamp.format ( theTimestamp; theFormat )
 
-recursive to go thru each character
+Parameters: ( theTimstamp ) Timestamp
+            ( theFormat ) text
 
+Dependencies: NONE
+
+References: Modeled after PHP's str_split: http://www.php.net/manual/en/function.date.php
+            Orginal FormatTimestamp by Thomas Seidler (http://www.briandunning.com/cf/1017)
+
+2012-10-14, JPS, Created from FormatTimestamp.
 */
 
 Let (
