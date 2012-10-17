@@ -8,6 +8,9 @@
 #####[list.implode ( glue; values )](https://github.com/jpscharf/fmfunctions/blob/master/list.implode.fmfn)
 `Joins the values (list) with the provided glue (text).`
 
+#####[list.in_list ( needle; haystack )](https://github.com/jpscharf/fmfunctions/blob/master/list.in_list.fmfn)
+`Will determine if a value (needle) exists in the provided list (haystack).`
+
 #####[list.position ( values; search )](https://github.com/jpscharf/fmfunctions/blob/master/list.position.fmfn)
 `Returns the numerical position of the supplied value`
 
