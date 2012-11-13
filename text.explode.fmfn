@@ -1,4 +1,4 @@
-/* 
+/*
 Purpose: Splits a string using the delimiter into a list.
 
 Returns: List
@@ -17,31 +17,32 @@ it will strip any existing ¶ as they would be ambiguous.
 
 2012-09-12, JPS, Created.
 2012-09-21, Re-wrote to use a global variable to increase the recursion limit.
+2012-11-13, JPS, Changed the global variable ($$FUNCTION.EXPLODE.TEXT.RESULTS), to local variables ($FUNCTION.EXPLODE.TEXT.RESULTS.
 */
 
 Let (
     [
         //Check for the delimiter
         delimiterCount = PatternCount ( theText ; theDelimiter );
-        
+
         //Get the delimiter length
         delimiterLength = Length ( theDelimiter );
-        
+
         //Clean up theText
         theText = If ( theDelimiter <> ¶; Substitute ( theText; ¶; "" ));
-        
+
         //Get the length of the text
         textLength = Length ( theText );
-        
+
         //Get the location of the first delimiter
         delimiterPosition  = Position ( theText ; theDelimiter ; 1 ; 1 );
-        
+
         //Get the first value and trim it
         firstValue = Trim ( Left ( theText ; delimiterPosition - 1 ));
-        
+
         //Save the current value
-        $$FUNCTION.EXPLODE.TEXT.RESULTS = List ( $$FUNCTION.EXPLODE.TEXT.RESULTS; firstValue );
-        
+        $FUNCTION.EXPLODE.TEXT.RESULTS = List ( $FUNCTION.EXPLODE.TEXT.RESULTS; firstValue );
+
         //Get the remaining text
         remainingText = Trim ( Right ( theText; textLength - delimiterPosition - delimiterLength + 1 ))
 
@@ -51,22 +52,22 @@ Let (
         //If theText is empty return nothing
         IsEmpty ( theText );
             "";
-        
+
         //If theDelimiter is empty return the original string
         IsEmpty ( theDelimiter ) or theDelimiter = ¶;
             theText;
-        
+
         //If there is no delimiter return the results
         delimiterCount = 0;
             Let (
                     [
-                        theList = $$FUNCTION.EXPLODE.TEXT.RESULTS;
+                        theList = $FUNCTION.EXPLODE.TEXT.RESULTS;
                         //Clear the global
-                        $$FUNCTION.EXPLODE.TEXT.RESULTS = ""
+                        $FUNCTION.EXPLODE.TEXT.RESULTS = ""
                     ];
                     List ( theList; theText )
                 );
-        
+
         //Continuing parsing
         text.explode ( theDelimiter; remainingText )
         )

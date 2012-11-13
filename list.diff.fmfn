@@ -14,6 +14,8 @@ References: Modeled after PHP's array_diff: http://www.php.net/manual/en/functio
 
 2011-09-16 JPS, Created.
 2012-10-02, Re-wrote to use a global variable to increase the recursion limit.
+2012-11-13, JPS, Changed the global variable ($$FUNCTION.DIFF.LIST.RESULTS), to local variables ($FUNCTION.DIFF.LIST.RESULTS.
+
 */
 
 Let (
@@ -29,22 +31,22 @@ Let (
         remainingValuesList1 = RightValues ( list1; ValueCount ( list1 ) - 1 );
 
         //If the first value of list1 is not in list2 keep and continue
-        $$FUNCTION.DIFF.LIST.RESULTS = If ( firstIsDuplicate; $$FUNCTION.DIFF.LIST.RESULTS; List ( $$FUNCTION.DIFF.LIST.RESULTS; firstValue ))
+        $FUNCTION.DIFF.LIST.RESULTS = If ( firstIsDuplicate; $FUNCTION.DIFF.LIST.RESULTS; List ( $FUNCTION.DIFF.LIST.RESULTS; firstValue ))
 
     ];
 
     Case (
         //If list2 is empty, or there are no duplicate values return list1
-        IsEmpty ( list2 ) or IsEmpty ( duplicateValues ) and IsEmpty ( $$FUNCTION.DIFF.LIST.RESULTS );
+        IsEmpty ( list2 ) or IsEmpty ( duplicateValues ) and IsEmpty ( $FUNCTION.DIFF.LIST.RESULTS );
             list1;
 
         //If there are no remaining duplicate values, return the list
         IsEmpty ( duplicateValues );
             Let (
                 [
-                    theList = $$FUNCTION.DIFF.LIST.RESULTS;
+                    theList = $FUNCTION.DIFF.LIST.RESULTS;
                     //Clear the global
-                    $$FUNCTION.DIFF.LIST.RESULTS = ""
+                    $FUNCTION.DIFF.LIST.RESULTS = ""
                 ];
                 List ( theList; remainingValuesList1 )
             );
