@@ -16,7 +16,7 @@ NOTE: If the provided delimiter is a ¶ the function will return the original te
 it will strip any existing ¶ as they would be ambiguous.
 
 2012-09-12, JPS, Created.
-2012-09-21, Re-wrote to use a global variable to increase the recursion limit.
+2012-09-21, JPS, Re-wrote to use a global variable to increase the recursion limit.
 2012-11-13, JPS, Changed the global variable ($$FUNCTION.EXPLODE.TEXT.RESULTS), to local variables ($FUNCTION.EXPLODE.TEXT.RESULTS).
 2012-12-04, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter
 */
