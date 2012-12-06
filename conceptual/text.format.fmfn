@@ -7,7 +7,7 @@ Purpose: Takes the provided text and formats it with the provided format.
 
 Returns: List
 
-Name: text.split ( theText; theFormat )
+Name: text.format ( theText; theExpression )
 
 Parameters: ( theText ) text
             ( theFormat ) text
