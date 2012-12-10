@@ -2,6 +2,12 @@
 
 ###A collection of FileMaker functions.
 
+#####[field.getFieldName ( theFQFN; useQuotes )](https://github.com/jpscharf/fmfunctions/blob/master/field.getFieldName.fmfn)
+`Extracts the field name from the FQFN (Fully Qualified Field Name).`
+
+#####[field.getTableName ( theFQFN; useQuotes )](https://github.com/jpscharf/fmfunctions/blob/master/field.getFieldName.fmfn)
+`Extracts the table name from the FQFN (Fully Qualified Field Name).`
+
 #####[list.diff ( list1; list2 )](https://github.com/jpscharf/fmfunctions/blob/master/list.diff.fmfn)
 `Returns a list of values that are in list1 but not in list2.`
 

@@ -1,0 +1,36 @@
+/*
+Purpose: Extracts the table name from the FQFN (Fully Qualified Field Name).
+
+Returns: Text
+
+Name: field.getTableName ( theFQFN; useQuotes )
+
+Parameters: ( theFQFN ) list = Fully qualified field name ( e.g. TABLE::FIELD )
+            ( useQuotes ) boolean
+
+Dependencies: NONE
+
+References: Based upon the GFN function by Kevin Frank (http://www.filemakerhacks.com/?p=1065)
+
+2012-12-10, JPS, Created.
+
+*/
+
+Let (
+    [
+        ~nameRAW  = GetFieldName ( theFQFN );
+        ~FQFNParts = Substitute ( ~nameRAW ; "::" ; ¶ )
+    ];
+
+   //Make sure a proper FQFN was provided
+    Case (
+        ValueCount ( ~FQFNParts ) = 2 and useQuotes;
+            Quote ( GetValue ( ~FQFNParts ; 1 ) );
+
+        ValueCount ( ~FQFNParts ) = 2;
+            GetValue ( ~FQFNParts ; 1 );
+
+        //DEFAULT
+        ""
+    )
+)
