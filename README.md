@@ -13,9 +13,9 @@
 
 >**Dependancies:** 
 
->[text.split](blob/master/text.split.fmfn)
+>[text.split](fmfunctions/blob/master/text.split.fmfn)
 
->[list.implode](blob/master/list.implode.fmfn)
+>[list.implode](fmfunctions/blob/master/list.implode.fmfn)
 
 #####[list.diff ( list1; list2 )](https://github.com/jpscharf/fmfunctions/blob/master/list.diff.fmfn)
 `Returns a list of values that are in list1 but not in list2.`
