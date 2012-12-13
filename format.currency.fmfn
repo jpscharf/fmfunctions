@@ -1,0 +1,76 @@
+/*
+Purpose: Format as currency.
+
+Returns: Text
+
+Name: format.currency ( theNumber; decimalSeparator; thousandsDelimiter; currencySymbol, trailingCurrencySymbol )
+
+Parameters:
+                    ( number ) theNumber
+                    ( text ) decimalSeparator = the character to use as the decimal separator (e.g. "." "," etc.) [default "."]
+                    ( text ) thousandsDelimiter = enter the character you would like to use to separate thousands (e.g. "." "," etc.)
+                    ( text ) currencySymbol = the currency symbol (e.g. "$" "€" etc.) [defaults to "$"]
+                    ( boolean ) trailingCurrencySymbol = pass a 1 or True if you would like the currency symbol to trail [default False]
+
+Dependencies: text.split ( theText; theLength ), list.implode ( glue; values )
+
+2012-12-13, JPS, Created.
+
+References: Based upon formatNumber (Fabrice Nordmann) and AddDollarFormat (Jeremiah Small)
+
+*/
+
+Let (
+    [
+
+        //Check the default decimal separator
+        ~decimalSeparator = If ( isEmpty ( decimalSeparator ); "."; decimalSeparator );
+
+        //Round the number down to two decimal places
+        ~number = Round ( GetAsNumber ( theNumber ) ; 2 );
+
+        //Make sure the number is not empty
+        ~number = If ( IsEmpty ( ~number ) ; 0 ; ~number );
+
+        //Extract the integer from the number
+        ~integer = Case (
+                            ~number >= 1 or ~number <= -1;
+                                Int ( ~number ) ;
+
+                            ~number >= 0 and ~number < 1;
+                                0;
+
+                            ~number < 0 and ~number > -1;
+                                "-0"
+                          );
+
+        //If separateThousands is provided, add the separator to the integer
+        ~integerGroups = text.split ( ~integer; -3 );
+        ~integerWithThousandsDelimiter = list.implode ( thousandsDelimiter; ~integerGroups );
+
+        //Extract the decimal portion
+        ~decimal = Filter ( Replace ( ~number ; 1 ; Length ( ~integer ) ; "" ) ; "0123456789" );
+        ~decimal = Left ( ~decimal & "00" ; 2 );
+        ~trailingCurrencySymbol = GetAsBoolean ( trailingCurrencySymbol )
+    ];
+
+    Case (
+
+        //If no number provided return an empty string
+        IsEmpty ( ~number );
+            "";
+
+        //If a currency symbol is provided and trailingCurrencySymbol is false
+        not ~trailingCurrencySymbol and not IsEmpty ( currencySymbol );
+            currencySymbol & ~integerWithThousandsDelimiter & ~decimalSeparator & ~decimal;
+
+        //If a currency symbol is provided and trailingCurrencySymbol is true
+        ~trailingCurrencySymbol and not IsEmpty ( currencySymbol );
+            ~integerWithThousandsDelimiter & ~decimalSeparator & ~decimal & currencySymbol;
+
+        //If no currency symbol is provided return the number
+        IsEmpty ( currencySymbol );
+            ~integerWithThousandsDelimiter & ~decimalSeparator & ~decimal
+
+    )
+)

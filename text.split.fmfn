@@ -1,60 +1,75 @@
-/* 
-Purpose: Converts a string into a list, using the provided length.
+/*
+Purpose: Converts a string into a list, using the provided length. To split in reverse use a negative theLength.
 
 Returns: List
 
 Name: text.split ( theText; theLength )
 
-Parameters: ( theText ) text
-            ( theLength ) text [defaults to one]
+Parameters:
+                    ( theText ) text
+                    ( theLength ) text [defaults to one] Use a negative number to split from the right.
 
 Dependencies: NONE
 
 References: Modeled after PHP's str_split: http://www.php.net/manual/en/function.str-split.php
 
 2012-10-01, JPS, Created.
+2012-12-13, JPS, Changed the global variable ($$FUNCTION.SPLIT.TEXT.RESULTS), to local variables ($FUNCTION.EXPLODE.TEXT.RESULTS).
+2012-12-13, JPS, Added the ability to split in reverse using a negative theLength.
+
 */
 
 Let (
     [
-        
+        //Get the absolute length
+        absoluteLength = Abs ( Int ( theLength ));
+
         // Check theLength
-        theLength = If ( theLength > 1; Floor ( theLength ); 1 );
+        theLength = If ( absoluteLength > 0; Int ( theLength ); 1 );
 
         //Get the length of the text
         textLength = Length ( theText );
-        
+
         //Get the first value and trim it
-        firstValue = If ( textLength >= theLength;  Trim ( Left ( theText ; theLength )));
-        
+        firstValue = Case (
+                                textLength >= absoluteLength and theLength > 0;
+                                    Trim ( Left ( theText ; absoluteLength ));
+
+                                textLength >= absoluteLength and theLength < 0;
+                                    Trim ( Right ( theText; absoluteLength ));
+
+                                textLength < absoluteLength;
+                                    Trim ( theText )
+                                );
+
         //Save the current value
-        $$FUNCTION.SPLIT.TEXT.RESULTS = List ( $$FUNCTION.SPLIT.TEXT.RESULTS; firstValue );
-        
+        $FUNCTION.SPLIT.TEXT.RESULTS = If ( theLength > 0; List ( $FUNCTION.SPLIT.TEXT.RESULTS; firstValue ); List (  firstValue; $FUNCTION.SPLIT.TEXT.RESULTS ));
+
         //Get the remaining text
-        remainingText = Trim ( Right ( theText; textLength - theLength ))
+        remainingText = If ( theLength > 0;  Trim ( Right ( theText; textLength - absoluteLength )); Trim ( Left ( theText; textLength - absoluteLength )))
 
     ];
 
     Case (
+
         //If theText is empty return nothing
-        IsEmpty ( theText ) and IsEmpty ( $$FUNCTION.SPLIT.TEXT.RESULTS );
+        IsEmpty ( theText ) and IsEmpty ( $FUNCTION.SPLIT.TEXT.RESULTS );
             "";
-        
+
         //If the text is smaller than theLength return the text
-        textLength < theLength and IsEmpty ( $$FUNCTION.SPLIT.TEXT.RESULTS );
+        textLength < absoluteLength and IsEmpty ( $FUNCTION.SPLIT.TEXT.RESULTS );
             theText;
-        
+
         //If the remaining text is smaller than the length, return the results
-        textLength < theLength;
+        textLength <= absoluteLength;
             Let (
                     [
-                        theList = $$FUNCTION.SPLIT.TEXT.RESULTS;
+                        theList = $FUNCTION.SPLIT.TEXT.RESULTS;
                         //Clear the global
-                        $$FUNCTION.SPLIT.TEXT.RESULTS = ""
+                        $FUNCTION.SPLIT.TEXT.RESULTS = ""
                     ];
-                    List ( theList; theText )
+                    List ( theList; remainingText )
                 );
-        
         //Continue parsing
         text.split ( remainingText; theLength )
         )

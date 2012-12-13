@@ -8,6 +8,15 @@
 #####[field.getTableName ( theFQFN; useQuotes )](https://github.com/jpscharf/fmfunctions/blob/master/field.getFieldName.fmfn)
 `Extracts the table name from the FQFN (Fully Qualified Field Name).`
 
+#####[format.currency ( theNumber; decimalSeparator; thousandsDelimiter; currencySymbol, trailingCurrencySymbol )](https://github.com/jpscharf/fmfunctions/blob/master/format.currency.fmfn)
+`Format as currency.`
+
+>**Dependancies:** 
+
+>[text.split](/blob/master/text.split.fmfn)
+
+>[list.implode](/blob/master/list.implode.fmfn)
+
 #####[list.diff ( list1; list2 )](https://github.com/jpscharf/fmfunctions/blob/master/list.diff.fmfn)
 `Returns a list of values that are in list1 but not in list2.`
 
