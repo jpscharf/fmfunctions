@@ -20,8 +20,8 @@ it will strip any existing ¶ as they would be ambiguous.
 2012-11-13, JPS, Changed the global variable ($$FUNCTION.EXPLODE.TEXT.RESULTS), to local variables ($FUNCTION.EXPLODE.TEXT.RESULTS).
 2012-12-04, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter
 2012-12-11, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter, and there was only one delimiter.
-2013-01-23, JPS, Fixed a bug that caused the function to return an empty result when theDelimter was a return.
-2013-01-23, JPS, Fixed a MAJOR bug that caused the function to break when the delimiterCount = 0 or when the delimterLength > 1.
+2013-01-23, JPS, Fixed a bug that caused the function to return an empty result when theDelimiter was a return.
+2013-01-23, JPS, Fixed a MAJOR bug that caused the function to break when the delimiterCount = 0 or when the delimiterLength > 1.
 */
 
 Let (
