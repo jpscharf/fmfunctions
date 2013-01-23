@@ -35,7 +35,7 @@
 #####[list.unique ( values )](https://github.com/jpscharf/fmfunctions/blob/master/list.unique.fmfn)
 `Removes duplicate values from the list.`
 
-#####[text.explode ( theDelimiter; theText )](https://github.com/jpscharf/fmfunctions/blob/master/text.explode.fmfn) **UPDATE - Major Bug Fixed**
+#####[text.explode ( theDelimiter; theText )](https://github.com/jpscharf/fmfunctions/blob/master/text.explode.fmfn) **UPDATE - Major Bug Fixed** (January 23, 2013)
 `Splits a string using the delimiter into a list.`
 
 #####[text.pathsafe ( text )](https://github.com/jpscharf/fmfunctions/blob/master/text.pathsafe.fmfn)
@@ -45,4 +45,4 @@
 `Converts a string into a list, using the provided length.`
 
 -
-**NOTICE**: If you began using the text.explode function prior to December 5, 2012, there was a _MAJOR_ bug that caused it to fail if the last character of theText was theDelimiter.
+**NOTICE**: If you began using the text.explode function prior to January 23, 2013, there was a bug that broke the function if the theDelimiter = ¶, or the delimiterLength > 1.
