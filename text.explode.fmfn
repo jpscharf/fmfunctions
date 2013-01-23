@@ -20,6 +20,8 @@ it will strip any existing ¶ as they would be ambiguous.
 2012-11-13, JPS, Changed the global variable ($$FUNCTION.EXPLODE.TEXT.RESULTS), to local variables ($FUNCTION.EXPLODE.TEXT.RESULTS).
 2012-12-04, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter
 2012-12-11, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter, and there was only one delimiter.
+2013-01-23, JPS, Fixed a bug that caused the function to return an empty result when theDelimter was a return.
+2013-01-23, JPS, Fixed a MAJOR bug that caused the function to break when the delimiterCount = 0 or when the delimterLength > 1.
 */
 
 Let (
@@ -31,7 +33,7 @@ Let (
         delimiterLength = Length ( theDelimiter );
 
         //Clean up theText
-        theText = If ( theDelimiter <> ¶; Substitute ( theText; ¶; "" ));
+        theText = If ( theDelimiter <> ¶; Substitute ( theText; ¶; "" ); theText );
 
         //Get the length of the text
         textLength = Length ( theText );
@@ -46,21 +48,20 @@ Let (
         $FUNCTION.EXPLODE.TEXT.RESULTS = List ( $FUNCTION.EXPLODE.TEXT.RESULTS; firstValue );
 
         //Get the remaining text
-        remainingText = Trim ( Right ( theText; textLength - delimiterPosition - delimiterLength + 1 ))
-
+        remainingText = Trim ( Right ( theText; textLength - ( delimiterPosition + delimiterLength - 1 )))
     ];
 
     Case (
         //If theText is empty return nothing
-        IsEmpty ( theText );
+        IsEmpty ( theText ) and ValueCount ( $FUNCTION.EXPLODE.TEXT.RESULTS ) = 0;
             "";
 
         //If theDelimiter is empty return the original string
-        IsEmpty ( theDelimiter ) or theDelimiter = ¶;
+        ( IsEmpty ( theDelimiter ) or theDelimiter = ¶ or delimiterCount = 0 ) and ValueCount ( $FUNCTION.EXPLODE.TEXT.RESULTS ) = 0;
             theText;
 
         //If there is no delimiter return the results
-        delimiterCount = 0 or delimiterPosition = textLength;
+        delimiterCount = 1 or delimiterPosition = textLength;
             Let (
                     [
                         theList = $FUNCTION.EXPLODE.TEXT.RESULTS;
