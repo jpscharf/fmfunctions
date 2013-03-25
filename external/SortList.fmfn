@@ -1,0 +1,80 @@
+// SortList ( ValueList ; Sort ; Type ) v2.0
+// Carrefull : Parameter is : ValueList ; Sort ; Type and not ValueList ; Type ; Sort
+// If you change the name "SortList", also change in the variable $sl_Exe
+
+/*
+ No dependance. Recursive CustomFunction .....
+
+ To sort a list
+-> ValueList List for sort - ValueCount ( ValueList ) ≤ 100000
+-> Sort : Empty or "Asc" or "Des" [Empty = "Asc"]
+-> Type : Empty or "Text" or "Number" or "Date" or "Time"or "TimeStamp" [Empty = "Text"]
+
+* Note :
+     Keep empty value and double value
+     When you can use ValueListItem(), it's better for timing
+     < 2000 : 0 to 2 sec but 5000 number : between 12 and 15 secondes
+*/
+//---------------------------------- Example
+// SortList (  "B¶D¶C¶¶A¶C" ; "Asc" ; "Text" ) --> Result = "¶¶A¶B¶C¶C¶D"
+//---------------------------------------------------------*/
+// Agnès Barouh - August 2009 - Substitute( filemaker§tictac.fr; §; @ )
+// WebSite : http://www.tictac.fr/CoinFileMaker/Page.html
+//---------------------------------------------------------*/
+
+Case (
+        not IsEmpty ( $$sl_V ) ;
+
+Let ([
+        Size = ValueCount ( ValueList )
+ ];
+ Case (
+        Size ≤ 2 ; Replace ( $$sl_Res ; Position ( $$sl_Res ; ¶ ; 1 ; $$sl_n ) + 1 ; 0 ; $$sl_V & ¶ ) & Let ( $$sl_V = "" ; "" ) ;
+ Let( [
+         A = Ceiling ( Size / 2 ) ;
+         V =  GetValue ( ValueList ; A ) ;
+         Compare = Choose ( Type ; V ; GetAsNumber ( V ) ; GetAsDate ( V ) ; GetAsTime ( V ) ; GetAsTimestamp ( V ) ) ;
+         Test = Case (  Sort = "<=" ; $$sl_G <= Compare ; $$sl_G >= Compare ) ;
+         NewList = Choose ( Test ; Let ( $$sl_n = $$sl_n + A - 1 ; MiddleValues ( ValueList ; A ; Size )) ; LeftValues ( ValueList ; A ))
+         ];
+    SortList ( NewList ; Sort  ; Type )
+     )
+));
+
+Let ([
+
+ $sl_List = ValueList ;
+ $$sl_Res = GetValue ( $sl_List ; 1 ) ;
+ $sl_Get = "GetAs" & Case ( IsEmpty ( Type ) ; "Text" ; Type ) ;
+ $sl_T = Case ( Type = "Text" or IsEmpty ( Type ) ; 0 ; Type = "Number" ; 1 ; Type = "Date" ; 2 ; Type = "Time" ; 3 ; Type = "TimeStamp" ; 4 ) ;
+ $sl_A = Case ( Sort = "Des" ; ">=" ; Sort = "Asc" or IsEmpty ( Sort ) ; "<=" ) ;
+ $sl_D = Case ( Sort = "Des" ; "<=" ; ">=" ) ;
+
+                         Start = 2 ; End = ValueCount ( $sl_List ) ; Diff = End - Start + 1;
+                         End =  Case ( Diff > 100000 or IsEmpty ( End ); "Error"; End );
+                         $sl_C = Start - 1; $null = "\"\"";
+                         Calc = Case ( Diff >= 1600; 170 ; Floor ( Diff / 10 ) + 1 );
+                         First = Substitute ( ( 10 ^ Calc ) - 1; 9; "__________" ) ;
+                         X = Floor ( Diff / 1700 );
+
+                         $sl_Exe = Substitute (  First ; "_" ;
+"Let ([
+$sl_C = $sl_C + 1 ; $$sl_n = 1 ;
+$$sl_V = GetValue ( $sl_List ; $sl_C );
+$$sl_G = " & $sl_Get & " ( $$sl_V );
+$$sl_Res = Case( $$sl_G " & $sl_A & $sl_Get & " ( GetValue ( $$sl_Res ; 1 ) ) ; $$sl_V &\¶& $$sl_Res ;
+$$sl_G " & $sl_D & $sl_Get & " ( GetValue ( $$sl_Res ;$sl_C-1)) ; $$sl_Res &\¶& $$sl_V ;
+SORTLIST ($$sl_Res ; $sl_A ; $sl_T))];\"\")&\¶&¶" ); // NOTA : If you change the name of the CF, "SortList", Change here too.
+
+                          Final =  Case ( X > 0; Substitute ( ( 10 ^ X ) - 1; 9; "Evaluate ( $sl_Exe & $null ) & " ) ) &
+                                      "Evaluate( LeftValues ( $sl_Exe ; " & Diff - ( X * 1700 ) & " ) & $null ) & " & $null
+            ];
+Case (
+       IsEmpty ( ValueList ) ; "" ;
+       End = "Error" ; "Error : Check ValueList or Start and End" ;
+       IsEmpty ( $sl_T ) or IsEmpty ( $sl_A ) ; "Error : Check Sort and Type" ;
+       Substitute ( "#^#" & Evaluate ( Final ) & "#^#"; [ "¶"; "¶#^#" ];[ "#^#¶"; "" ];[ "¶#^#"; "¶" ];[ "¶#^#"; "" ];[ "#^#"; "" ]) & $$sl_Res
+       )
+)
+& Let ([ $sl_Exe  = "" ; $sl_C = "" ; $sl_List = "" ; $$sl_Res = "" ; $$sl_G = "" ; $$sl_n = "" ; $$sl_V = "" ]; "" )
+)

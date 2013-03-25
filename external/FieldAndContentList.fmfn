@@ -1,0 +1,105 @@
+// FieldAndContentList ( TypeField ; AddFieldList ; Contain ; NotContain ; TagField ; TagValue ; EmptyValue ) V_1.0
+// FieldAndContentList () requires CustomList ( Start ; End ; Function )
+//----------------------------------
+/*
+** Do not use on a layout with a lot of related records.
+
+  retourne les noms de rubrique et le contenu de l'ensemble des rubriques posées sur un modèle ( multivaluées et tables liées incluses )
+  à ne pas mettre dans une rubrique calcul, utilisation par script conseillée !
+
+  returns field names and contents of all the field are on a layout (repeatingField and related records included)
+  not to put in a section calculation, use script recommended!
+
+ FieldAndContentList ( "" ; "" ; "" ; "::" ; "Field" ;  "Value" ; 0 ) pour uniquement les rubriques de la table source
+ FieldAndContentList ( "" ; "" ; "::" ; "" ; "Field" ;  "Value" ; 1 ) pour uniquement les rubriques liées à la table source
+ FieldAndContentList ( "" ; "" ; "" ; "glo_¶z" ;  "Field" ;  "Value" ; 0 ) ne prends pas en compte la table ou les rubrique avec Glo_ et z_
+ FieldAndContentList ( "Standard" ; "" ; "" ; "" ;  "Field" ;  "Value" ; 0 ) uniquement les rubriques "Standard"
+
+  TypeField : "Standard¶StoredCalc¶Summary¶UnstoredCalc¶Global" - keep type - Default are "Standard¶Global"
+  AddFieldList : permet d'ajouter des rubriques qui ne sont pas sur le modèle / Add field are not on the layout
+  Contain ; NotContain : keep or exclude field or table name
+  TagField ; TagValue : xml result
+  EmptyValue : 1 - keep or 0 - exclude empty value
+*/
+
+//----------------------------------
+// @ Agnès -Decembre 2011- BugReport Substitute ( filemaker§tictac.fr ; § ; @ )
+//----------------------------------
+
+Let ([
+
+// TypeField = "" ; AddFieldList = "" ; Contain = "adr" ; NotContain = "lab_¶int_¶men_" ;
+// TagField = "Field" ; TagValue = "Value" ; EmptyValue = 0 ;
+
+           FieldList = List ( FieldNames ( Get ( FileName ) ; Get ( LayoutName ) ) ; AddFieldList ) ;
+           $FACL_TypeField = Case ( IsEmpty ( TypeField ) ; "Standard¶Global" ; TypeField ) ;
+           $FACL_Ey = EmptyValue ;
+
+//---------------------- MiniFilterList
+           fl_Keek = Upper ( Contain );  fl_NotKeep = Upper ( NotContain );
+           $FAFL_k = "xkkeeppx";   $FAFL_n = "xnnoneex";
+           $FAFL_FirstList = FieldList ;
+           $FACL_FilterFieldList = Case ( IsEmpty ( fl_Keek & fl_NotKeep ) ; $FAFL_FirstList;
+           Let([
+           $FAFL_List = Upper ( $FAFL_FirstList ) ;
+           $FAFL_Count = ValueCount ( fl_NotKeep ) + 0 ;
+           $FAFL_Val = Case ( not IsEmpty ( fl_NotKeep ) ; fl_NotKeep & ¶ ) & ¶ & fl_Keek ;
+           Trigger = CustomList ( 1; ValueCount ( $FAFL_Val ) ;
+"Let([V = GetValue ( $FAFL_Val; [n] ) ; $FAFL_List = Substitute ( $FAFL_List; V; Case (([n]+0) ≤ $FAFL_Count; $FAFL_n ; $FAFL_k )) ]; \"\" )" )
+           ]; Case ( IsEmpty ( fl_Keek );
+           FilterValues ($FAFL_FirstList; $FAFL_List ) ;
+           CustomList ( 1; ValueCount ( $FAFL_List ) ;
+"Let([V = GetValue ( $FAFL_List; [n] ) ]; Case ( PatternCount ( V; $FAFL_k ) And not PatternCount ( V; $FAFL_n ) ; GetValue ( $FAFL_FirstList; [n] )))" ))));
+//------------------------------------
+
+//------------------------ LinkFoundCount
+
+           R = "Let ([
+$FACL_n = Case ( $FACL_n = $FACL_f ; Case ( IsEmpty ( $FACL_Last ) ; Round ( $FACL_n / 2 ; 0 ) ; Round ( $FACL_n - (( $FACL_n - $FACL_Last ) / 2 ) ; 0 ) ) ; $FACL_f ) ;
+Test = EvaluationError ( GetNthRecord ( [##] ; $FACL_n )) ;
+$FACL_Last = Case (( IsEmpty ( $FACL_Last ) And not Test ) or ( not Test And ( $FACL_n > $FACL_Last )) ; $FACL_n ; $FACL_Last ) ;
+$FACL_First = Case (( IsEmpty ( $FACL_First ) And not Test ) or ( Test And ( $FACL_f < $FACL_First )) ; $FACL_f ; $FACL_First ) ;
+$FACL_f = Case ( Test ; $FACL_n ; Case ( IsEmpty ( $FACL_First ) ; Round ( $FACL_n + (( $FACL_f - $FACL_n ) / 2 ) ; 0 ) ; Round ( $FACL_n + (( $FACL_First - $FACL_Last ) / 2 ) ; 0 ) )
+)]; \"\" )&" ;
+           $FACL_CountLink = ( Substitute ( ( 10 ^ 30 ) - 1 ; 9 ; R ) & "\"\"" ) ;
+
+//------------------------------------
+
+           $FACL_TableActive = Get ( LayoutTableName ) ;
+           $FACL_PrepaList = CustomList ( 1 ; ValueCount ( $FACL_FilterFieldList ) ;
+"Let ([
+V = GetValue ( $FACL_FilterFieldList ; [n] ) ;
+Test = Not PatternCount ( V ; \"::\" ) ;
+R = Case ( Test ; $FACL_TableActive & \"::\" ) & V ;
+$FACL_n = 1000000 * 2 ; $FACL_f = $FACL_n ; $FACL_Last = \"\" ; $FACL_First = \"\" ;
+Link = Case ( not Test ; Evaluate ( Substitute ( $FACL_CountLink ; \"[##]\" ; R ) ) & $FACL_Last ) ;
+Ty = FieldType( Get ( FileName) ; R ) ;
+TypeTest = PatternCount ( $FACL_TypeField ; LeftWords ( Ty ; 1 )) ;
+Repeat = LeftWords ( FieldRepetitions ( Get ( FileName ) ; Get ( LayoutName ) ; V ) ; 1 ) ;
+Repet = Case ( Right ( V ; 1 ) = \"]\" ; RightWords ( V ; 1 ) ; 1 ) ;
+$FACL_V = Substitute ( R ; \"[\" & Repet & \"]\" ; \"\" ) ;
+$FACL_Link = Case ( Link > 1 ; \"[-\" & Link & \"-]\" ) ;
+Result = Case ( TypeTest ; Case ( Repeat > 1 ; CustomList ( Repet ; Repeat + Repet - 1 ; \"$FACL_Link & $FACL_V & \"\"[\"\" & [n] & \"\"]\"\"\") ; $FACL_Link & R ))
+]; Result )" ) ;
+
+           $FACL_ListFieldName = CustomList ( 1 ; ValueCount ( $FACL_PrepaList ) ;
+"Let ([
+V = GetValue ( $FACL_PrepaList ; [n] ) ;
+GetNth = Case ( Left ( V ; 2 ) = \"[-\" ; LeftWords ( V ; 1 ) ; 1 ) ;
+$FACL_Value = Substitute ( V ; \"[-\" & GetNth & \"-]\" ; \"\" ) ;
+Value = Case ( GetNth > 1 ; CustomList ( 1 ; GetNth ; \"\"\"GetNthRecord(\"\" & $FACL_Value & \"\" ;  \"\" & [n] & \"\" )\"\"\" ) ; $FACL_Value )
+]; Value )") ;
+
+           Result = CustomList ( 1 ; ValueCount ( $FACL_ListFieldName ) ;
+"Let ([
+V = GetValue ( $FACL_ListFieldName ; [n] ) ;
+Eval = Evaluate ( V ) ;
+R = \"|LF|\" & V & \"|RF|\" & \"|LV|\" & Eval & \"|RV|\"
+]; Case ( $FACL_Ey = 1 ; R ; Case ( Not IsEmpty ( Eval ) ; R ) ) )" )
+
+];
+           Substitute (
+           Result ; [ "GetNthRecord(" ; "" ] ; [ " ;  " ; " [NthRecord_" ] ; [ " )" ; "]" ] ;
+           [ "|LF|" ; "<" & TagField & ">" ] ; [ "|RF|" ; "</" & TagField & ">" ] ;
+           [ "|LV|" ; "<" & TagValue & ">" ] ; [ "|RV|" ; "</" & TagValue & ">" ] )
+)

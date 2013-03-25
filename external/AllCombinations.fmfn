@@ -1,0 +1,44 @@
+/*
+AllWordCombinations function
+
+Author
+Michael E. Kupietz FileMaker Pro Consulting. Contact information and comprehensive resume can be found on http://www.kupietz.com
+
+Format
+AllCombinations ( theString )
+
+Parameters
+theString - a text string
+
+Data type returned
+text
+
+Description
+Returns a list of every possible subset, of any length, of characters contained in parameter theString.
+
+March 14, 2013
+*/
+
+Case(
+   Length( theString ) < 2; //case 1
+     theString;
+   Length( theString ) = 2; //case 2
+     Left( theString; 1 ) & "¶" & Right( theString; 1 ) & "¶" & theString;
+     Let(  //default case
+        [
+           nextvalues =
+           AllCombinations( Right( theString; Length( theString ) - 1 ) );
+           results = Left( theString; 1 ) &
+           Substitute( "¶" & nextvalues; "¶"; "¶" & Left( theString; 1 ) ) &
+           "¶" & nextvalues
+        ];
+        results
+     )
+)
+
+/*
+This software code is licensed under the Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+You are permitted to use or modify this code for personal, noncommercial use, provided it contains the entire top and bottom comment blocks without any alteration.
+
+Be excellent to each other.*/
