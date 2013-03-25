@@ -1,7 +1,7 @@
 # External Functions #
 ### Interesting functions from outside sources. ###
 
-##### [SortList ( ValueList ; Sort ; Type )](SortList.fmfn) #####
+##### [SortList ( ValueList ; Sort ; Type )](/external/SortList.fmfn) #####
 `To sort a list, "Text" or "Number" or "Date" or "Time"or "TimeStamp".`
 
 **Source:** http://www.briandunning.com/cf/1181
