@@ -52,3 +52,5 @@ it will strip any existing ¶ as they would be ambiguous.
    ]
 }
 ````
+-
+References: https://code.google.com/p/jsdoc-toolkit/wiki/TagReference
