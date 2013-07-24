@@ -2,6 +2,9 @@
 
 ### A collection of FileMaker functions.
 
+##### [date.modifyByDays ( theDate; daysToModify )](date.modifyByDays.fmfn)
+`Change the provided date, using the provided number of days.`
+
 ##### [field.getFieldName ( theFQFN; useQuotes )](field.getFieldName.fmfn)
 `Extracts the field name from the FQFN (Fully Qualified Field Name).`
 

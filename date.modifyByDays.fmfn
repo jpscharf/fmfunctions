@@ -1,0 +1,26 @@
+/*
+Purpose: Change the provided date, using the provided number of days.
+
+Returns: Date
+
+Name: date.modifyByDays ( theDate; daysToModify )
+
+Parameters: ( date ) theDate
+                    ( number) daysToModify
+Dependencies: NONE
+
+2013-07-24, JPS, Created.
+*/
+
+Let (
+    [
+        ~startDate = GetAsDate ( theDate );
+        ~startDateValid = If ( ~startDate <> "?" and not IsEmpty ( ~startDate ); True; False );
+        ~daysToModifyValid = If ( not IsEmpty ( daysToModify ); True; False );
+        ~startDateNumber = GetAsNumber ( ~startDate );
+        ~newDateNumber = ~startDateNumber + daysToModify;
+        ~newDate = GetAsDate ( ~newDateNumber )
+    ];
+
+    If ( ~startDateValid and ~daysToModifyValid; ~newDate; "?" )
+)
