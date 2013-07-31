@@ -12,8 +12,8 @@ Dependencies: NONE
 
 References: Modeled after PHP's array_diff: http://www.php.net/manual/en/function.array-diff.php
 
-2011-09-16 JPS, Created.
-2012-10-02, Re-wrote to use a global variable to increase the recursion limit.
+2011-09-16, JPS, Created.
+2012-10-02, JPS, Re-wrote to use a global variable to increase the recursion limit.
 2012-11-13, JPS, Changed the global variable ($$FUNCTION.DIFF.LIST.RESULTS), to local variables ($FUNCTION.DIFF.LIST.RESULTS.
 
 */
