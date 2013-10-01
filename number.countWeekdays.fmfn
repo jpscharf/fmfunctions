@@ -1,0 +1,36 @@
+/*
+Purpose: To determine the number of weekdays within a date range.
+
+Returns: Number
+
+Name: number.countWeekdays ( startDate; endDate )
+
+Parameters:
+                    ( date ) startDate
+                    ( date ) endDate
+
+Dependencies: NONE
+
+2013-09-30, JPS, Created.
+
+*/
+
+Let (
+    [
+        ~startDate = Min ( GetAsDate ( startDate ); GetAsDate ( endDate ));
+        ~startDayOfWeek = DayOfWeek ( ~startDate );
+        ~startDayNumber = GetAsNumber ( ~startDate );
+        ~firstMonday = ~startDayNumber + If ( ~startDayOfWeek = 7; 2; 2 - ~startDayOfWeek );
+        ~endDate = Max ( GetAsDate ( startDate ); GetAsDate ( endDate ));
+        ~endDayOfWeek = DayOfWeek ( ~endDate );
+        ~endDayNumber = GetAsNumber ( ~endDate );
+        ~lastMonday = ~endDayNumber + If ( ~endDayOfWeek = 7; 2; 2 - ~endDayOfWeek );
+        ~weekCount = ( GetAsNumber ( ~LastMonday ) - GetAsNumber ( ~FirstMonday )) / 7;
+        ~weekdayCountBase = ~weekCount * 5 ;
+        ~startDayDifference = If ( ~startDayOfWeek = 1 or ~startDayOfWeek = 7; 0;  ~startDayOfWeek - 2 );
+        ~endDayDifference = If ( ~endDayOfWeek = 1 or ~endDayOfWeek = 7; 0; ~endDayOfWeek - 1 );
+        ~weekdayCountFull = ~weekdayCountBase - ~startDayDifference + ~endDayDifference
+    ];
+    
+    ~weekdayCountFull
+)

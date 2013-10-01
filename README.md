@@ -47,5 +47,8 @@
 ##### [text.split ( theText; theLength )](text.split.fmfn)
 `Converts a string into a list, using the provided length.`
 
+##### [number.countWeekdays ( startDate; endDate )](number.countWeekdays.fmfn)
+`Counts the number of weekdays within a date range.`
+
 -
 **NOTICE**: If you began using the text.explode function prior to January 23, 2013, there was a bug that broke the function if the theDelimiter = ¶, or the delimiterLength > 1.
