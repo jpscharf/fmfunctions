@@ -1,0 +1,83 @@
+/*
+Purpose: Fixed length text, padded and aligned.
+
+Returns: Text
+
+Name: text.fixedLength ( theText; thePadding; theAlignment; theFixedLength )
+
+Parameters: ( theText ) text
+            ( thePaddingChar ) char
+            ( theAlignment ) = enum (left, right, center)
+            ( theFixedLength ) number
+
+Dependencies: NONE
+
+References: NONE
+
+NOTE: If an invalid or no alignment is provided, the function defaults to left alignment.
+
+2013-10-30, JPS, Created.
+*/
+
+Let (
+    [
+        //Get the text length
+        ~theTextLength = Length ( theText );
+
+        //Get the padding length
+        ~thePaddingCharLength = Length ( thePaddingChar );
+
+        //Determine the alignment
+        ~textAlignment =
+            Case (
+                theAlignment = "Right" or theAlignment = "R" or theAlignment = 1;
+                    "right";
+
+                theAlignment = "Center" or theAlignment = "C" or theAlignment = 0;
+                    "center";
+
+                //DEFAULT
+                    "left"
+            );
+
+        //For center alignment we need to calculate the padding on the left and right
+        ~adjustedLength = theFixedLength - ~theTextLength;
+        ~lengthLeft = Max ( Ceiling ( ~adjustedLength / 2); 0 );
+        ~lengthRight = Max ( Floor ( ~adjustedLength / 2); 0 )
+    ];
+
+    Case (
+        //If the fix length may only be a number
+        Length ( theFixedlength ) <> Length ( GetAsNumber ( theFixedlength ));
+            "?";
+            
+        //If theFixedLength = 0, return ""
+        theFixedLength = 0;
+            "";
+
+        //If the text is longer than theFixedlength return error ?
+        ~theTextLength > GetAsNumber ( theFixedlength );
+            "?";
+
+        //If thePaddingChar is more than one character return error ?
+        ~thePaddingCharLength > 1;
+            "?";
+
+        //If the text length = theFixedLength, or the paddingChar is empty, return theText
+        ~theTextLength = theFixedLength or IsEmpty ( thePaddingChar );
+            theText;
+
+        //Process left aligned
+        ~textAlignment = "left";
+            text.fixedLength ( theText & thePaddingChar; thePaddingChar; ~textAlignment; theFixedlength );
+
+        //Process right aligned
+        ~textAlignment = "right";
+            text.fixedLength ( thePaddingChar & theText; thePaddingChar; ~textAlignment; theFixedlength );
+
+        //Process center aligned
+            text.fixedLength ( ""; thePaddingChar; "left"; ~lengthLeft ) &
+            theText &
+            text.fixedLength ( ""; thePaddingChar; "right"; ~lengthRight )
+    )
+)
