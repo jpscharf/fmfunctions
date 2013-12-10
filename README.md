@@ -32,6 +32,9 @@
 ##### [list.position ( values; search )](list.position.fmfn)
 `Returns the numerical position of the supplied value`
 
+##### [list.search ( needle; haystack )](master/list.search.fmfn)
+`Will return the index of the matching value (needle) in the list (haystack).`
+
 ##### [list.trim ( values )](list.trim.fmfn)
 `Remove blank list items.`
 

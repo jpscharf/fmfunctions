@@ -1,0 +1,49 @@
+/*
+Purpose: Will return the index of the matching value (needle) in the list (haystack).
+
+Returns: Text
+
+Name: list.in_list ( needle; haystack )
+
+Parameters: ( needle ) text = string to search for in the provided haystack
+            ( haystack ) list = FileMaker List ( return delimited list )
+
+Dependencies: NONE
+
+References: Modeled after PHP's array_search: http://us1.php.net/manual/en/function.array-search.php
+
+2013-12-10, JPS, Created.
+*/
+
+Let (
+    [
+        // Make sure the value is in the list
+        ~haystackIndexLength = ValueCount ( haystack );
+        ~needleInHaystack = not IsEmpty ( FilterValues ( haystack ; needle ));
+
+        ~matchStartOfList = GetValue ( haystack ; 1 ) = needle;
+        ~matchEndOfList = GetValue ( haystack ; ~haystackIndexLength ) = needle;
+
+        ~matchInsideOfListPosition = Position ( haystack ; ¶ & needle & ¶ ; 1 ; 1 );
+        ~matchInsideOfListIndex = PatternCount ( Left ( haystack; ~matchInsideOfListPosition ); "¶" )
+    ];
+
+    Case (
+
+        // No matching value
+        not ~needleInHaystack;
+            0;
+
+        // Match: First Value
+        ~matchStartOfList;
+            1;
+
+        // Match: Inside Value
+        ~matchInsideOfListIndex;
+            ~matchInsideOfListIndex + 1;
+
+        // Match: Last Value
+        ~matchEndOfList;
+            ~haystackIndexLength
+    )
+)
