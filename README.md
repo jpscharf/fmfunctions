@@ -26,13 +26,13 @@
 ##### [list.implode ( glue; values )](list.implode.fmfn)
 `Joins the values (list) with the provided glue (text).`
 
-##### [list.in_list ( needle; haystack )](master/list.in_list.fmfn)
+##### [list.in_list ( needle; haystack )](list.in_list.fmfn)
 `Will determine if a value (needle) exists in the provided list (haystack).`
 
 ##### [list.position ( values; search )](list.position.fmfn)
 `Returns the numerical position of the supplied value`
 
-##### [list.search ( needle; haystack )](master/list.search.fmfn)
+##### [list.search ( needle; haystack )](list.search.fmfn)
 `Will return the index of the matching value (needle) in the list (haystack).`
 
 ##### [list.trim ( values )](list.trim.fmfn)
