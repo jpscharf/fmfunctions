@@ -20,6 +20,9 @@
 
 >[list.implode](list.implode.fmfn)
 
+##### [get.platformAsText ()](get.platformAsText.fmfn)
+`Get the system platform as a human readable text string.`
+
 ##### [list.diff ( list1; list2 )](list.diff.fmfn)
 `Returns a list of values that are in list1 but not in list2.`
 

@@ -1,0 +1,81 @@
+/*
+Purpose: Get the system platform as a human readable text string.
+
+Returns: Text
+
+Name: get.platformAsText
+
+Parameters: NONE
+
+Dependencies: NONE
+
+2014-01-15, JPS, Created.
+
+References: Based upon GetPlatformName v1.1 by HazMatt (hazmatt.net) 
+[http://www.briandunning.com/cf/1488]
+
+*/
+
+Let (
+    [
+        ~SystemPlatform = Abs ( Get ( SystemPlatform ));
+        ~SystemPowerPC = If ( Get ( SystemPlatform ) = -1; True );
+        ~SystemVersion = Get ( SystemVersion );
+        ~ApplicationVersion = Get ( ApplicationVersion );
+        ~OSListSeparator = " == ";
+
+        // OS Lists (dictionaries)
+        ~MacOSList = List       (
+                                    "10.0" & ~OSListSeparator & "Mac OS X [SYSVER] Cheetah" & If ( ~SystemPowerPC; " (PowerPC)");
+                                    "10.1" & ~OSListSeparator & "Mac OS X [SYSVER] Puma" & If ( ~SystemPowerPC; " (PowerPC)");
+                                    "10.2" & ~OSListSeparator & "Mac OS X [SYSVER] Jaguar" & If ( ~SystemPowerPC; " (PowerPC)");
+                                    "10.3" & ~OSListSeparator & "Mac OS X [SYSVER] Panther" & If ( ~SystemPowerPC; " (PowerPC)");
+                                    "10.4" & ~OSListSeparator & "Mac OS X [SYSVER] Tiger" & If ( ~SystemPowerPC; " (PowerPC)");
+                                    "10.5" & ~OSListSeparator & "Mac OS X [SYSVER] Leopard" & If ( ~SystemPowerPC; " (PowerPC)");
+                                    "10.6" & ~OSListSeparator & "Mac OS X [SYSVER] Snow Leopard";
+                                    "10.7" & ~OSListSeparator & "Mac OS X [SYSVER] Lion";
+                                    "10.8" & ~OSListSeparator & "Mac OS X [SYSVER] Mountain Lion";
+                                    "10.9" & ~OSListSeparator & "Mac OS X [SYSVER] Mavericks";
+                                );
+        ~WindowsOSList = List   (
+                                    "5.0" & ~OSListSeparator & "Windows 2000";
+                                    "5.1" & ~OSListSeparator & "Windows XP 32 Bit";
+                                    "5.2" & ~OSListSeparator & "Windows XP 64 Bit";
+                                    "6.0" & ~OSListSeparator & "Windows Vista";
+                                    "6.1" & ~OSListSeparator & "Windows 7";
+                                    "6.2" & ~OSListSeparator & "Windows 8";
+                                );
+        ~iPadString = If ( ~SystemPlatform = 3 and PatternCount( ~ApplicationVersion; "ipad") > 0; "(iPad) " );
+
+        // Now determine the OS
+        // Mac
+        ~MacOSMatchPosition = Position ( ~MacOSList; Left( ~SystemVersion; 4 ); 1; 1 );
+        ~MacOSMatchValueNumber = ValueCount ( Left ( ~MacOSList; ~MacOSMatchPosition ));
+        ~MacOSMatchList = Substitute ( GetValue ( ~MacOSList ; ~MacOSMatchValueNumber ) ; [ ~OSListSeparator ; "¶" ]);
+        ~MacOSMatch = Substitute ( GetValue ( ~MacOSMatchList ; 2 ); "[SYSVER]" ; ~SystemVersion );
+
+        // Windows
+        ~WindowsOSMatchPosition = Position ( ~WindowsOSList; ~SystemVersion; 1; 1 );
+        ~WindowsOSMatchValueNumber = ValueCount ( Left ( ~WindowsOSList; ~WindowsOSMatchPosition ));
+        ~WindowsOSMatchList = Substitute ( GetValue ( ~WindowsOSList ; ~WindowsOSMatchValueNumber ) ; [ ~OSListSeparator ; "¶" ]);
+        ~WindowsOSMatch = GetValue ( ~WindowsOSMatchList ; 2 )
+    ];
+
+    // Output the System
+    Case (
+        // Mac OS X
+        ~SystemPlatform = 1;
+            ~MacOSMatch;
+
+        // Windows
+        ~SystemPlatform = 2;
+            ~WindowsOSMatch;
+
+        // iOS
+        ~SystemPlatform = 3;
+            "iOS " & ~iPadString & ~SystemVersion;
+
+        // DEFAULT
+            "Unknown"
+    )
+)
