@@ -20,7 +20,7 @@
 
 >[list.implode](list.implode.fmfn)
 
-##### [get.platformAsText ()](get.platformAsText.fmfn)
+##### [get.platformAsText ( OSPlatform; OSVersion; appVersion )](get.platformAsText.fmfn)
 `Get the system platform as a human readable text string.`
 
 ##### [list.diff ( list1; list2 )](list.diff.fmfn)

@@ -3,10 +3,11 @@ Purpose: Get the system platform as a human readable text string.
 
 Returns: Text
 
-Name: get.platformAsText
+Name: get.platformAsText ( OSPlatform; OSVersion; appVersion )
 
-Parameters: NONE
-
+Parameters: ( OSPlatform ) text
+            ( OSVersion ) list
+            ( appVersion ) text
 Dependencies: NONE
 
 2014-01-15, JPS, Created.
@@ -18,10 +19,10 @@ References: Based upon GetPlatformName v1.1 by HazMatt (hazmatt.net)
 
 Let (
     [
-        ~SystemPlatform = Abs ( Get ( SystemPlatform ));
+        ~SystemPlatform = Abs ( If ( IsEmpty ( OSPlatform ); Get ( SystemPlatform ); OSPlatform ));
         ~SystemPowerPC = If ( Get ( SystemPlatform ) = -1; True );
-        ~SystemVersion = Get ( SystemVersion );
-        ~ApplicationVersion = Get ( ApplicationVersion );
+        ~SystemVersion = If ( IsEmpty ( OSVersion ); Get ( SystemVersion ); OSVersion );
+        ~ApplicationVersion = If ( IsEmpty ( appVersion ) ; Get ( ApplicationVersion ); appVersion );
         ~OSListSeparator = " == ";
 
         // OS Lists (dictionaries)
