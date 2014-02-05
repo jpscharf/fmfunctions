@@ -47,7 +47,7 @@
 ##### [text.explode ( theDelimiter; theText )](text.explode.fmfn) **UPDATE - Major Bug Fixed** (January 23, 2013)
 `Splits a string using the delimiter into a list.`
 
-##### [text.fixedLength ( theText; thePadding; theAlignment; theFixedLength )](text.fixedLength.fmfn)
+##### [text.fixedLength ( theText; thePaddingChar; theAlignment; theFixedLength )](text.fixedLength.fmfn)
 `Fixed length text, padded and aligned.`
 
 ##### [text.pathsafe ( text )](text.pathsafe.fmfn)
