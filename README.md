@@ -35,7 +35,7 @@
 ##### [list.position ( values; search )](list.position.fmfn)
 `Returns the numerical position of the supplied value`
 
-##### [list.search ( needle; haystack )](list.search.fmfn)
+##### [list.in_list ( needle; haystack )](list.in_list.fmfn)
 `Will return the index of the matching value (needle) in the list (haystack).`
 
 ##### [list.trim ( values )](list.trim.fmfn)
