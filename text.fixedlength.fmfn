@@ -3,7 +3,7 @@ Purpose: Fixed length text, padded and aligned.
 
 Returns: Text
 
-Name: text.fixedLength ( theText; thePadding; theAlignment; theFixedLength )
+Name: text.fixedLength ( theText; thePaddingChar; theAlignment; theFixedLength )
 
 Parameters: ( theText ) text
             ( thePaddingChar ) char
