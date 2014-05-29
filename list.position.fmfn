@@ -1,11 +1,56 @@
 /*
  * =====================================================
- * list.position ( values; search )
+ * @function list.position ( values; search )
  *
- * RETURNS:     (number) numerical position of the supplied value
- * DEPS:        none
- * NOTES:       https://github.com/petrowsky/fmpfunctions/blob/master/list.position.fmfn
+ * @parameter values (list)
+ * @parameter search (string)
+ *
+ * @return number The list line number that matches the supplied search string.
+ *
+ * @category list
+ * @copyright 2013, Jason P. Scharf
+ *
+ * @version 1.0.0
+ *
+ * @dependencies NONE
+ *
+ * @purpose Get the position of the first whole value that matches the supplied
+ * search string.
+ *
+ * @notes Based upon list.position by Matt Petrowsky
+ * (https://github.com/petrowsky/fmpfunctions/blob/master/list.position.fmfn)
+ * @/notes
+ *
+ * @todo Currently case sensitive: add case sensitive flag or make it disregard
+ * case
+ *
+ * @changes
+ * 2014-03-28, JPS, Recreated to use tags and using a better placeholder.
+ * @/changes
  * =====================================================
  */
 
-Position ( Substitute ( Filter ( Substitute ( ¶& values &¶ ; ¶& search &¶ ; "¶•¶" ) ; "•¶" ) ; ¶ ; "|" ) ; "•" ; 1 ; 1 ) - 1
+Let (
+    [
+        /************************/
+        /* Start Configuration **/
+        /************************/
+
+        values = List ( "apple"; "pear"; "grape"; "orange" );
+        search = "pear";
+
+        /* CONSTANTS ************/
+        TAG = Char ( 26 ); /* (0026, 001A) SUB */
+
+        /************************/
+        /* End Configuration ****/
+        /************************/
+
+        ~substituteValue = Substitute ( ¶& values &¶ ; ¶& search &¶ ; ¶ & TAG & ¶ );
+        ~valuesCleared = Filter ( ~substituteValue; ¶ & TAG & ¶ );
+        ~extractPosition = Position ( ~valuesCleared; TAG; 1; 1 ) - 1;
+        ~cleanupPosition = Max ( 0; ~extractPosition )
+    ];
+
+    ~cleanupPosition
+)
