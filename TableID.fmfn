@@ -1,0 +1,66 @@
+/*
+ * =====================================================
+ * @function TableID ( TableName )
+ *
+ * @parameter TableName (string)
+ *
+ * @return number The ID for the table.
+ *
+ * @category design
+ * @copyright 2014, Jason P. Scharf
+ *
+ * @version 0.0.1
+ *
+ * @dependencies NONE
+ *
+ * @purpose Get the internal table ID of the provided table name or fully
+ * qualified field name (FQFN).
+ *
+ * @todo NONE
+ *
+ * @changes
+ * 2014-07-10, JPS, Created (0.0.1).
+ * @/changes
+ * =====================================================
+ */
+
+Let (
+    [
+        /************************/
+        /* Start Configuration **/
+        /************************/
+
+        /* 
+         * Test to see if the provided TableName is a FieldName string or a 
+         * fields contents.
+         */
+
+        ~tableNameFieldContentsTest = GetFieldName ( TableName );
+        ~tableName =
+            Case ( 
+                /* TableName is a Fully Qualified Field Name (FQFN). */
+                ~tableNameFieldContentsTest = "?" and
+                PatternCount ( TableName ; "::" ) = 1;
+                    GetValue ( Substitute ( TableName; "::"; ¶ ); 1 );
+
+                /* TableName is a fields contents. */
+                ~tableNameFieldContentsTest <> "?";
+                    GetValue ( Substitute ( ~tableNameFieldContentsTest; "::"; ¶ ); 1 );
+                
+                /* TableName is is a FQFN or the fields contents. */
+                TableName
+            );
+
+        /* CONSTANTS ************/
+        VERSION = "0.0.1";
+
+        /************************/
+        /* End Configuration ****/
+        /************************/
+        
+        /* Get the Table Name's ID */
+        ~tableID = ExecuteSQL ( "SELECT TableID FROM FileMaker_Tables WHERE TableName = ?"; ""; ""; ~tableName )
+    ];
+
+    ~tableID
+)
