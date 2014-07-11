@@ -1,0 +1,60 @@
+/*
+ * =====================================================
+ * @function FieldID ( FieldName )
+ *
+ * @parameter FieldName (string)
+ *
+ * @return number The ID for the field.
+ *
+ * @category design
+ * @copyright 2014, Jason P. Scharf
+ *
+ * @version 0.0.1
+ *
+ * @dependencies NONE
+ *
+ * @purpose Get the internal field ID of the provided fully qualified field
+ * name (FQFN) or a field on the table of the current layout.
+ *
+ * @todo NONE
+ *
+ * @changes
+ * 2014-07-10, JPS, Created (0.0.1).
+ * @/changes
+ * =====================================================
+ */
+
+Let (
+    [
+        /************************/
+        /* Start Configuration **/
+        /************************/
+        
+        /* 
+         * Test to see if the provided FieldName is a FieldName string or a 
+         * fields contents.
+         */
+
+        ~fieldContentsTest = GetFieldName ( FieldName );
+        ~fieldName = If ( ~fieldContentsTest = "?"; FieldName; ~fieldContentsTest );
+
+        /* CONSTANTS ************/
+        VERSION = "0.0.1";
+
+        /************************/
+        /* End Configuration ****/
+        /************************/
+
+        /* Check to see if the provided TableName is a FQFN */
+        ~isFullyQualifiedFieldName = PatternCount ( ~fieldName ; "::" ) = 1;
+
+        /* Resolve the table name */
+        ~resolvedTableName = If ( ~isFullyQualifiedFieldName; GetValue ( Substitute ( ~fieldName; "::"; ¶ ); 1 ); Get ( LayoutTableName ));
+        ~resolvedFieldName = If ( ~isFullyQualifiedFieldName; GetValue ( Substitute ( ~fieldName; "::"; ¶ ); 2 ); ~fieldName );
+        
+        /* Get the Table Name's ID */
+        ~fieldID = ExecuteSQL ( "SELECT FieldID FROM FileMaker_Fields WHERE TableName = ? and FieldName = ?"; ""; ""; ~resolvedTableName; ~resolvedFieldName )
+    ];
+
+    ~fieldID
+)
