@@ -22,6 +22,7 @@ it will strip any existing ¶ as they would be ambiguous.
 2012-12-11, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter, and there was only one delimiter.
 2013-01-23, JPS, Fixed a bug that caused the function to return an empty result when theDelimiter was a return.
 2013-01-23, JPS, Fixed a MAJOR bug that caused the function to break when the delimiterCount = 0 or when the delimiterLength > 1.
+2014-08-12, JPS, Returns are now encode as \¶ instead of being replaced with "".
 */
 
 Let (
@@ -33,7 +34,7 @@ Let (
         delimiterLength = Length ( theDelimiter );
 
         //Clean up theText
-        theText = If ( theDelimiter <> ¶; Substitute ( theText; ¶; "" ); theText );
+        theText = If ( theDelimiter <> ¶; Substitute ( theText; ¶; "\¶" ); theText );
 
         //Get the length of the text
         textLength = Length ( theText );
