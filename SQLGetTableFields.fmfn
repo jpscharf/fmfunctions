@@ -1,0 +1,96 @@
+/*
+ * =====================================================
+ * @function SQLGetTableFields ( TableName; IgnoreName; IgnorePrefix )
+ *
+ * @parameter TableName (string)
+ * @parameter IgnoreName (List)
+ * @parameter IgnorePrefix (List)
+ *
+ * @return list List of fields in TableName.
+ *
+ * @category logical
+ * @copyright 2014, Jason P. Scharf
+ *
+ * @version 0.0.2
+ *
+ * @dependencies text.explode, list.implode
+ *
+ * @purpose Get a list of fields from TableName that do not include fields
+ * in IgnoreName or that start with anything in IgnorePrefix.
+ *
+ * @todo NONE
+ *
+ * @changes
+ * 2014-08-21, JPS, Created (0.0.1).
+ * 2014-08-24, JPS, Added @DEBUG command to IgnoreName (0.0.2).
+ * @/changes
+ * =====================================================
+ */
+
+Let (
+    [
+        /************************/
+        /* Start Configuration **/
+        /************************/
+        
+        /* 
+         * Test to see if the provided TableName is a Table Name string or
+         * fields contents.
+         */
+        ~isFQFN = EvaluationError ( GetFieldName ( TableName ));
+        ~FQFN = If ( ~isFQFN = 0; GetFieldName ( TableName ); "?" );
+        ~tableName = If ( ~FQFN = "?"; TableName; ~FQFN );
+        /* If TableName os not provided, get the current layouts table name. */
+        ~tableName = If ( IsEmpty ( ~tableName ); Get ( LayoutTableName ); ~tableName);
+        
+        /* Remove @DEBUG */
+        ~ignoreName = Substitute ( IgnoreName ; "@DEBUG" ; "" );
+        /* Unquote IgnoreName */
+        ~ignoreFieldName = Substitute ( ~ignoreName ; "\"" ; "" );
+
+        /* Encode Special Characters in IgnorePrefix for LIKE. */
+        ~ignoreFieldPrefix = Substitute (
+            IgnorePrefix ;
+            [ "_" ; "\_" ];
+            [ "%" ; "\%" ]
+        );
+
+        /* CONSTANTS ************/
+        VERSION = "0.0.2";
+        DEBUG = ( PatternCount ( IgnoreName ; "@" ) = 1 );
+        /************************/
+        /* End Configuration ****/
+        /************************/
+        /* Check to see if the provided TableName is a FQFN */
+        ~isFullyQualifiedFieldName = PatternCount ( ~tableName ; "::" ) = 1;
+
+        /* Resolve the table name */
+        ~resolvedTableName = If ( ~isFullyQualifiedFieldName; GetValue ( text.explode ( "::"; ~tableName ); 1 ); ~tableName );
+
+        /* Use ExecuteSQL and VirtualScheme to get a list of fields. */
+        ~fieldQueryBase = "SELECT FieldName FROM FileMaker_Fields WHERE TableName = ?";
+        ~fieldQueryOmitFieldByName = If ( not IsEmpty ( ~ignoreFieldName ); " AND FieldName NOT IN ('" & list.implode ( "', '"; ~ignoreFieldName ) & "')");
+        ~fieldQueryOmitFieldByPrefix = If ( not IsEmpty ( ~ignoreFieldPrefix ); " AND UPPER ( FieldName ) NOT LIKE UPPER ('" & list.implode ( "%') AND UPPER ( FieldName ) NOT LIKE UPPER('"; ~ignoreFieldPrefix ) & "%')"); 
+        ~fieldQueryCombined = ~fieldQueryBase & ~fieldQueryOmitFieldByName & ~fieldQueryOmitFieldByPrefix;
+        ~fieldQueryResults = ExecuteSQL ( ~fieldQueryCombined; ""; ""; ~resolvedTableName )
+    ];
+
+    Case (
+        DEBUG;
+            List (
+                "Version: " & VERSION;
+                "Table Name: " & ~tableName;
+                "Table Name - Resolved: " & ~resolvedTableName;
+                " -- Ignore Fields -- ";
+                text.tab & "Name: " & ~ignoreFieldName;
+                text.tab & "Prefix: " & ~ignoreFieldPrefix;
+                "Query: " & ~fieldQueryCombined;
+                "Query Error: " & EvaluationError ( ExecuteSQL ( ~fieldQueryCombined; ""; ""; ~resolvedTableName ));
+                " -- Results -- ";
+                ~fieldQueryResults;
+            );
+
+        /* DEFAULT */
+            ~fieldQueryResults
+    )
+)
