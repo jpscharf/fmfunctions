@@ -1,0 +1,79 @@
+/*
+ * =====================================================
+ * @function EmptyColumnsToNull ( sqlResults; columnDelimiter; rowDelimiter; nullCharacter )
+ *
+ * @parameter sqlResults (string)
+ * @parameter columnDelimiter (string)
+ * @parameter rowDelimiter (string)
+ * @parameter nullCharacter (string)
+ *
+ * @return string Return the SQL results with empty values changed to null
+ *
+ * @category list
+ * @copyright 2015, Jason P. Scharf
+ *
+ * @version 1.0
+ *
+ * @dependencies NONE
+ *
+ * @purpose Prepare sql results for list manipulation functions.
+ *
+ * @notes
+ * @/notes
+ *
+ * @changes
+ * 2015-12-16, JPS, Created. [1.0.0]
+ * @/changes
+ * =====================================================
+ */
+
+Let (
+    [
+        /************************/
+        /* Start Configuration **/
+        /************************/
+
+        /* CONSTANTS ************/
+        Debug = False;
+
+        // Default to ASCII code 31 ( 31, 037, 1F - US, Unit Separator )
+        COL = If ( IsEmpty ( columnDelimiter ); Char ( 31 ); columnDelimiter );
+
+        // Default to ASCII code 30 ( 30, 036, 1E - RS, Record Separator )
+        ROW = If ( IsEmpty ( rowDelimiter ); Char ( 30 ); rowDelimiter );
+
+        // Default to ASCII code 21 ( 21, 025, 15 - NAK, Negative Acknowledgement )
+        NUL = If ( IsEmpty ( nullCharacter ); Char ( 21 ); nullCharacter )
+
+        /************************/
+        /* End Configuration ****/
+        /************************/
+    ];
+
+        If (
+            IsEmpty ( sqlResults );
+                "";
+
+            /* ELSE */
+
+            Substitute (
+                sqlResults & ROW;
+                [
+                    COL & COL;
+                    COL & NUL & COL
+                ];
+                [
+                    COL & COL;
+                    COL & NUL & COL
+                ];
+                [
+                    COL & ROW;
+                    COL & NUL & ROW
+                ];
+                [
+                    ROW & COL;
+                    ROW & NUL & COL
+                ]
+            )
+        )
+)
