@@ -1,0 +1,84 @@
+/*
+ * =====================================================
+ * @function date.periodWorkdays ( dateStart; dateEnd )
+ *
+ * @parameter dateStart (date)
+ * @parameter dateEnd (date)
+ *
+ * @return number The number of workdays in the provided period.
+ *
+ * @category date
+ * @copyright 2014, Jason P. Scharf
+ *
+ * @version 1.0.0
+ *
+ * @dependencies NONE
+ *
+ * @purpose Get the number of workdays for a time period.
+ *
+ * @changes
+ * 2014-07-18, JPS, Created.
+ * @/changes
+ * =====================================================
+ */
+
+Let (
+    [
+        /************************/
+        /* Start Configuration **/
+        /************************/
+
+        ~debug = PatternCount ( dateStart & dateEnd; "@" ) > 0;
+        ~dateStart = GetAsDate ( Substitute ( dateStart; "@"; "" ));
+        ~dateEnd = GetAsDate ( Substitute ( dateEnd; "@"; "" ));
+
+        /************************/
+        /* End Configuration ****/
+        /************************/
+
+        ~dayCount = ~dateEnd - ~dateStart + 1;
+
+        /* First Week */
+        ~weekFirstStartDayOfWeek = DayOfWeek ( ~dateStart );
+        ~weekFirstWorkdays = Min ( 5; 7 - ~weekFirstStartDayOfWeek );
+
+        /* Middle Week(s) */
+        ~weekMiddleStartDate = ~dateStart + ( 7 - ~weekFirstStartDayOfWeek + 1 );
+        ~weekMiddleCount = Floor (( ~dateEnd - ~weekMiddleStartDate ) / 7 );
+        ~weekMiddleWorkdays = ~weekMiddleCount * 5;
+
+        /* Last Week */
+        ~weekLastStartDate = ~weekMiddleStartDate + ( ~weekMiddleCount * 7 );
+        ~weekLastDaycount = ~dateEnd - ~weekLastStartDate;
+        ~weekLastWorkdays = Min ( 5; DayOfWeek ( ~dateEnd ) - 1 );
+
+        /* Total Workdays */
+        ~workdaysTotal = ~weekFirstWorkdays + ~weekMiddleWorkdays + ~weekLastWorkdays
+    ];
+
+    Case (
+        ~debug;
+            List (
+                "Total Workdays: " & ~workdaysTotal;
+                "Day Count: " & ~dayCount;
+                "Start DoW: " & ~weekFirstStartDayOfWeek;
+                "First Week Workdays: " & ~weekFirstWorkdays;
+                "Middle Weeks Start Date: " & ~weekMiddleStartDate;
+                "Middle Weeks Count: " & ~weekMiddleCount;
+                "Middle Weeks Workdays: " & ~weekMiddleWorkdays;
+                "Last Week Start Date: " & ~weekLastStartDate;
+                "Last Week Day Count: " & ~weekLastDaycount;
+                "Last Week Workdays: " & ~weekLastWorkdays;
+            );
+
+        ~dateStart = "?" or
+        ~dateEnd = "?";
+            "?";
+
+        ~dateEnd < ~dateStart;
+            "?";
+
+        /* DEFAULT */
+            ~workdaysTotal
+    ) 
+)
