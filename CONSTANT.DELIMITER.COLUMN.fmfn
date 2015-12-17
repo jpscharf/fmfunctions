@@ -1,0 +1,21 @@
+/*
+Purpose: Returns the Column Delimiter Constant
+
+Description: Use ASCII code 31 ( 31, 037, 1F - US, Unit Separator ) to
+delimit columns.
+    Alternates:
+    "⁝" (8285, 205D, &#8285;) TRICOLON
+
+Returns: Text
+
+Name: CONSTANT.DELIMITER.COLUMN ()
+
+Parameters: NONE
+
+Dependencies: NONE
+
+Changelog:
+    2014-02-18, JPS, Created.
+    2014-04-25, JPS, Change delimiter to ASCII 31.
+*/
+Char ( 31 )

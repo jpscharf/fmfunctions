@@ -1,0 +1,26 @@
+/*
+Purpose: Returns the Row Delimiter Constant
+
+Description: Use ASCII code 30 ( 30, 036, 1E - RS, Record Separator ) to
+delimit rows.
+    Alternates:
+    "¶" (13, D, 014 - CR, Carriage Return)
+    "⁑" (8273, 2051, &#8273;) TWO ASTERISKS ALIGNED VERTICALLY
+    "⁕" (8277, 2055, &#8277;) FLOWER PUNCTUATION MARK
+    "⁌" (8268, 204C, &#8268;) BLACK LEFTWARDS BULLET
+    "∎" (8718, 220E, &#8718;) END OF PROOF
+
+Returns: Text
+
+Name: CONSTANT.DELIMITER.ROW ()
+
+Parameters: NONE
+
+Dependencies: NONE
+
+Changelog:
+    2014-02-18, JPS, Created.
+    2014-04-25, JPS, Change delimiter to ASCII 30.
+
+*/
+Char ( 30 )

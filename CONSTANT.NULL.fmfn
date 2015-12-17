@@ -1,0 +1,23 @@
+/*
+Purpose: Returns the NULL Constant
+
+Description: Unicode for empty set ∅, used to delineate columns that are empty
+
+Description: Use ASCII code 21 ( 21, 025, 15 - NAK, Negative Acknowledgement ) to
+delimit columns.
+    Alternates:
+    "∅" (8709, 2205 ) Empty Set
+
+Returns: Text
+
+Name: CONSTANT.NULL ()
+
+Parameters: NONE
+
+Dependencies: NONE
+
+Changelog:
+    2014-02-18, JPS, Created.
+    2014-04-25, JPS, Change delimiter to ASCII 21.
+*/
+Char ( 21 )
