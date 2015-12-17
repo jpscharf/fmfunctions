@@ -1,0 +1,17 @@
+/*
+Purpose: Insert single tab [alias of text.insertTabs(1)].
+
+Returns: Text
+
+Name: text.tab ( )
+
+Parameters: NONE
+
+Dependencies: text.insertTabs ( )
+
+References: NONE
+
+2014-02-05, JPS, Created.
+*/
+
+text.insertTabs ( 1 )

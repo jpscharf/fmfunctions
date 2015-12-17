@@ -1,0 +1,29 @@
+/*
+Purpose: Insert [tabCount] tabs.
+
+Returns: Text
+
+Name: text.insertTabs ( tabCount )
+
+Parameters: ( tabCount ) number
+
+Dependencies: NONE
+
+References: NONE
+
+2014-01-15, JPS, Created.
+*/
+
+Let (
+    [
+        ~tabCharacter = Char ( 9 ); // TAB
+        ~tabCountAsNumber = GetAsNumber ( tabCount )
+    ];
+
+    If ( ~tabCountAsNumber > 0;
+        ~tabCharacter & text.insertTabs ( ~tabCountAsNumber - 1 );
+
+        /* ELSE */
+            ""
+    )
+)
