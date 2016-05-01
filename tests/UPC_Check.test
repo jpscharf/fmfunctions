@@ -1,0 +1,17 @@
+Let (
+  [
+    ~UPCA = "614141000036";
+    ~EAN13 = "9501101530003"
+  ];
+  
+  List (
+    "UPCA";
+    "  — Code => " & ~UPCA;
+    "  — Check Digit => " & UPC_Check ( ~UPCA; False );
+    "  — Test => " & Choose ( ~UPCA = UPC_Check ( ~UPCA; ""); "Failed"; "Passed" );
+    "EAN13";
+    "  — Code => " & ~EAN13;
+    "  — Check Digit => " & UPC_Check ( ~EAN13; False );
+    "  — Test => " & Choose ( ~EAN13 = UPC_Check ( ~EAN13; ""); "Failed"; "Passed" );
+  )
+)

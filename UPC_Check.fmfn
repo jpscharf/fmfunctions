@@ -1,0 +1,84 @@
+/*
+Purpose: Generate the checkdigit for the provided UPC code.
+
+Returns: String
+
+Name: UPC_Check ( theCode; returnFullCode = true )
+
+Parameters: ( theCode ) number
+            ( returnFullCode ) boolean
+
+Dependencies: NONE
+
+References: NONE
+
+NOTE: Supports the following barcode formats:
+      - UPC-A:  11 + check digit
+      - EAN-13: 12 + check digit
+
+2016-05-01, JPS, Created.
+*/
+
+Let (
+  [
+    // Determine whether to return the full UPC or just teh check digit
+    returnFullCode = If ( IsEmpty ( returnFullCode ); true; GetAsBoolean ( returnFullCode ));
+
+    // theCode should inly contain numbers
+    theCode = Filter ( theCode ; "01234567890" );
+
+    // Get the length of the UPC
+    code_length = Length ( theCode );
+
+    // Strip any existing check digit
+    theCode = 
+      Case (
+        code_length = 11;
+          theCode;
+
+        code_length = 12 and
+        UPC_Check ( Left ( theCode; code_length - 1 ); false ) =  Right( theCode; 1 );
+          Left( theCode; code_length - 1 );
+
+        code_length = 13;
+          Left( theCode; code_length - 1 );
+
+        /* ELSE */
+          theCode
+      );
+
+    code_length = Length(theCode);
+    // Sum Odd Numbers
+    sum_odd =
+      Middle ( theCode ; 1 ; 1 ) +
+      Middle ( theCode ; 3 ; 1 ) +
+      Middle ( theCode ; 5 ; 1 ) +
+      Middle ( theCode ; 7 ; 1 ) +
+      Middle ( theCode ; 9 ; 1 ) +
+      Middle ( theCode ; 11 ; 1 );
+
+    // Sum Even Numbers
+    sum_even =
+      Middle ( theCode ; 2 ; 1 ) +
+      Middle ( theCode ; 4 ; 1 ) +
+      Middle ( theCode ; 6 ; 1 ) +
+      Middle ( theCode ; 8 ; 1 ) +
+      Middle ( theCode ; 10 ; 1 );
+
+    multiplier = If ( code_length = 11; sum_odd * 3; sum_even * 3 );
+    sum_all = multiplier + If ( code_length = 11; sum_even; sum_odd );
+    sum_mod = mod ( sum_all; 10 ) + 0;
+    checkdigit = If ( sum_mod = 10; sum_mod; 10 - sum_mod )
+  ];
+
+  Case (
+    code_length > 13;
+      -1;
+
+    returnFullCode;
+      thecode & checkdigit;
+
+    /* ELSE */
+      checkdigit
+    )
+)
