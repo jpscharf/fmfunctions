@@ -1,0 +1,30 @@
+List (
+  Let (
+    [
+      ~test_name = "text.explode";
+      ~values = "||||A||b||";
+      ~result = text.explode ( "|"; ~values )
+    ];
+    
+    List (
+      "TEST 1 —> " & ~test_name;
+      "  — Values => " & ~values;
+      "  — Results => " & ~result;
+      "  — Test => " & If ( ~result = "A¶b"; "Passed"; "Failed" );
+    )
+  );
+  Let (
+    [
+      ~test_name = "text.explode";
+      ~values = "  A  b  ";
+      ~result = text.explode ( " "; ~values )
+    ];
+    
+    List (
+      "TEST 2 —> " & ~test_name;
+      "  — Values => " & ~values;
+      "  — Results => " & ~result;
+      "  — Test => " & If ( ~result = "A¶b"; "Passed"; "Failed" );
+    )
+  );
+)

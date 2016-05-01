@@ -15,29 +15,45 @@ References: Modeled after PHP's explode: http://us.php.net/manual/en/function.ex
 NOTE: If the provided delimiter is a ¶ the function will return the original text. Also,
 it will strip any existing ¶ as they would be ambiguous.
 
-2012-09-12, JPS, Created.
-2012-09-21, JPS, Re-wrote to use a global variable to increase the recursion limit.
-2012-11-13, JPS, Changed the global variable ($$FUNCTION.EXPLODE.TEXT.RESULTS), to local variables ($FUNCTION.EXPLODE.TEXT.RESULTS).
-2012-12-04, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter
-2012-12-11, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter, and there was only one delimiter.
-2013-01-23, JPS, Fixed a bug that caused the function to return an empty result when theDelimiter was a return.
-2013-01-23, JPS, Fixed a MAJOR bug that caused the function to break when the delimiterCount = 0 or when the delimiterLength > 1.
+2016-05-01, JPS, Fixed bug with trailing delimiter breaking the function.
 2014-08-12, JPS, Returns are now encode as \¶ instead of being replaced with "".
+2013-01-23, JPS, Fixed a MAJOR bug that caused the function to break when the delimiterCount = 0 or when the delimiterLength > 1.
+2012-12-11, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter, and there was only one delimiter.
+2012-12-04, JPS, Fixed a MAJOR bug that caused the function to break if theText ended with theDelimiter
+2012-11-13, JPS, Changed the global variable ($$FUNCTION.EXPLODE.TEXT.RESULTS), to local variables ($FUNCTION.EXPLODE.TEXT.RESULTS).
+2013-01-23, JPS, Fixed a bug that caused the function to return an empty result when theDelimiter was a return.
+2012-09-21, JPS, Re-wrote to use a global variable to increase the recursion limit.
+2012-09-12, JPS, Created.
 */
 
 Let (
     [
-        //Check for the delimiter
-        delimiterCount = PatternCount ( theText ; theDelimiter );
-
         //Get the delimiter length
         delimiterLength = Length ( theDelimiter );
+        
+        // Remove leading and trailing delimiter
+        theText = If (
+                    Left ( theText; delimiterLength ) = theDelimiter;
+                        Right ( theText; length(theText) - delimiterLength );
+                    /* ELSE */
+                        theText
+                );
 
-        //Clean up theText
-        theText = If ( theDelimiter <> ¶; Substitute ( theText; ¶; "\¶" ); theText );
+        theText = If (
+                    Right ( theText; delimiterLength ) = theDelimiter;
+                        Left ( theText; length(theText) - delimiterLength);
+                    /* ELSE */
+                        theText
+                );
 
         //Get the length of the text
         textLength = Length ( theText );
+
+        //Check for the delimiter
+        delimiterCount = PatternCount ( theText ; theDelimiter );
+
+        //Clean up theText
+        theText = If ( theDelimiter <> ¶; Substitute ( theText; ¶; "\¶" ); theText );
 
         //Get the location of the first delimiter
         delimiterPosition  = Position ( theText ; theDelimiter ; 1 ; 1 );
@@ -49,7 +65,8 @@ Let (
         $FUNCTION.EXPLODE.TEXT.RESULTS = List ( $FUNCTION.EXPLODE.TEXT.RESULTS; firstValue );
 
         //Get the remaining text
-        remainingText = Trim ( Right ( theText; textLength - ( delimiterPosition + delimiterLength - 1 )))
+        remainingText = Trim ( Right ( theText; textLength - ( delimiterPosition + delimiterLength - 1 )));
+        $$DEBUG.text.explode.remainingText = ""
     ];
 
     Case (
@@ -62,7 +79,7 @@ Let (
             theText;
 
         //If there is no delimiter return the results
-        delimiterCount = 1 or delimiterPosition = textLength;
+        delimiterCount <= 1 or delimiterPosition = textLength;
             Let (
                     [
                         theList = $FUNCTION.EXPLODE.TEXT.RESULTS;
