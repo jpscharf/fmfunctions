@@ -1,0 +1,32 @@
+List (
+  Let (
+    [
+      ~test_name = "list.implode";
+      ~string = "Hello " & ¶ & "World";
+      ~list = text.explode (" "; ~string );
+      ~result = list.implode ( " "; ~list )
+    ];
+    
+    List (
+      "TEST 1 —> " & ~test_name;
+      "  — List => " & ~list;
+      "  — Results => " & ~result;
+      "  — Test => " & If ( ~result = ~string; "Passed"; "Failed" );
+    )
+  );
+  Let (
+    [
+      ~test_name = "list.implode";
+      ~string = "Hello " & ¶ & "World" & ¶ &" And Welcome";
+      ~list = text.explode (" "; ~string );
+      ~result = list.implode ( " "; ~list )
+    ];
+    
+    List (
+      "TEST 2 —> " & ~test_name;
+      "  — List => " & ~list;
+      "  — Results => " & ~result;
+      "  — Test => " & If ( ~result = ~string ; "Passed"; "Failed" );
+    )
+  );
+)
