@@ -1,0 +1,127 @@
+/*
+ * =====================================================
+ * @function getAncestors ( primaryKey; parentKey; fieldList )
+ *
+ * @parameter primaryKey (field)
+ * @parameter parentKey (field)
+ * @parameter fieldList (list)
+ *
+ * @return list Returns a list of all ancestors for the provided primary key.
+ *
+ * @category data
+ * @copyright 2014, Jason P. Scharf
+ *
+ * @version 0.0.1
+ *
+ * @dependencies NONE
+ *
+ * @purpose Get a list of all the ancestors for a record.
+ *
+ * @notes
+ * Based upon list.position by Matt Petrowsky
+ * (https://github.com/petrowsky/fmpfunctions/blob/master/list.position.fmfn)
+ * @/notes
+ *
+ * @changes
+ * 2014-03-29, JPS, Created. [1.0.0]
+ * 2014-04-18, JPS, Fix bug with resolving last column position. [1.0.1]
+ * @/changes
+ * =====================================================
+ */
+
+Let (
+    [
+        /************************/
+        /* Start Configuration **/
+        /************************/
+
+        /* TEST *****************/
+        /*
+        columnDelimiter = Char ( 31 );
+        haystack = List ( "Nut"; "Apple"; "Pearnut"; "Pear" & columnDelimiter & "nut"; "Gable"& columnDelimiter & "nut"; "Orange" & columnDelimiter & "nut"; "Apple" & columnDelimiter & "Nut" );
+        //haystack = List ( "Nut" & columnDelimiter & "Apple"; "Pearnut"; "Pear"; "Orange"; "Orangenut"; "Apple" & columnDelimiter & "Nut" );
+        //haystack = "nut";
+        needle = "nut";
+        start = 1;
+        occurrence = 1;
+        */
+        /* /TEST ****************/
+        ~haystackLength = Length ( haystack );
+        ~needleLength = Length ( needle );
+
+        /* CONSTANTS ************/
+        Debug = False;
+        TAG = Char ( 26 ); /* (0026, 001A) SUB */
+        COL = columnDelimiter;
+        ROW = Char ( 30 );
+        NUL = Char ( 21 );
+
+        /************************/
+        /* End Configuration ****/
+        /************************/
+        
+        ~occurrencePosition = Position ( haystack; needle; start; occurrence );
+        ~occurrencePositionColumnFirst =
+            Left ( haystack; ~needleLength ) = needle and
+            (
+                ~haystackLength = ~needleLength or
+                Left ( haystack; ~needleLength + Length ( ¶ )) = needle & ¶ or
+                Left ( haystack; ~needleLength + Length ( COL )) = needle & COL
+            );
+        ~occurrencePositionColumnLast =
+            Right ( haystack; ~needleLength ) = needle and
+            (
+                Right ( haystack;  Length ( ¶ ) + ~needleLength ) = ¶ & needle or 
+                Right ( haystack;  Length ( COL ) + ~needleLength ) = COL & needle
+            );
+        ~occurrencePositionColumnMiddle_Tag =
+            Substitute (
+                haystack ;
+                [ COL & needle & COL ; TAG ];
+                [ COL & NEEDLE & ¶ ; TAG & ¶];
+                [ ¶ & NEEDLE & COL ; ¶ & TAG ]
+            );
+
+        ~occurrencePositionColumnMiddle_Filter =
+            Filter ( ~occurrencePositionColumnMiddle_Tag; ¶ & TAG );
+
+        ~occurrencePositionColumnMiddle_Offset =
+            Max ( 0; occurrence - start );
+        ~occurrencePositionColumnMiddle_Position =
+            Max ( 0; Position ( ~occurrencePositionColumnMiddle_Filter ; TAG ; start ; occurrence ) - ~occurrencePositionColumnMiddle_Offset );
+
+        ~occurrenceSublist = ¶ & Left ( haystack; ~occurrencePosition );
+        ~occurrenceRow = ValueCount ( ~occurrenceSublist ) - 1
+    ];
+
+    Case (
+        Debug;
+            List (
+                "First Column: " & ~occurrencePositionColumnFirst;
+                "Last Column: " & ~occurrencePositionColumnLast;
+                "Middle Offset: " & ~occurrencePositionColumnMiddle_Offset;
+                "Middle Tag:";
+                    ~occurrencePositionColumnMiddle_Tag;
+                "Middle Filter:";
+                   ~occurrencePositionColumnMiddle_Filter;
+                "Middle Position: " & ~occurrencePositionColumnMiddle_Position;
+            );
+
+        IsEmpty ( COL );
+            ~occurrenceRow;
+
+        ~occurrencePositionColumnFirst > 0 and
+        start = 1 and
+        occurrence = 1;
+            ~occurrencePositionColumnFirst;
+
+        ~occurrencePositionColumnMiddle_Position > 0;
+            ~occurrencePositionColumnMiddle_Position;
+
+        ~occurrencePositionColumnLast;
+            ValueCount ( haystack );
+
+        /* DEFAULT */
+            "?"
+    )
+)
