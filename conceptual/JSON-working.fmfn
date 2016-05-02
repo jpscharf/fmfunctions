@@ -1,0 +1,91 @@
+/*
+Purpose: JSON ( object; function, key, value )
+Returns: Text
+Name: JSON ( object; function; key; value;  )
+Parameters:
+        (text) object   = JSON Object.
+        (text) function = (enum) set, unset, get, find.
+        (text) key      = JSON Key
+        (text) value    = JSON Value
+
+Dependencies: text.spaces ( spaceCount )
+
+Notes: NONE
+
+Changelog:
+        2014-02-05, JPS, Created.
+*/
+/*
+{
+    "name":  "value",
+    "another": {
+        "foo": "bar",
+        "even": "more"
+    },
+    "array": [ "one", "two", "three" ]
+}
+*/
+Let (
+    [
+        ~newObject = IsEmpty ( object );
+        ~keyPosition =
+            Let (
+                [
+                    ~matchedKeyEnd = Position ( object; Quote ( key ) ; 1 ; 1 );
+                    ~matchedKeyStart = ~matchedKeyEnd - Length ( quote ( key ))
+                ];
+                ~matchedKeyStart & "," & ~matchedKeyEnd;
+            )
+    ];
+
+    Case (
+        // Add key/value pair to existing object
+        function = "set" and not ~newObject;
+            // First check for an existing key
+            List (
+                ~keyPosition;
+                "{";
+                text.spaces (4) & Quote ( key ) & ":" & Quote ( value );
+                "}";
+            );
+
+        // Add key/value pair to new object
+        function = "set" and ~newObject;
+            // First Determine if an object was passed
+            List (
+                "{";
+                text.spaces (4) & Quote ( key ) & ":" & Quote ( value );
+                "}";
+            );
+
+        /* DEFAULT */
+            "?"
+    )
+)
+
+/*
+Let
+(
+    [
+        ~JSON = "{
+            \"myKey\":\"aVal\"
+        }";
+
+        ~key = "myKey";
+        ~value = "myValue";
+
+        ~matchedKey = Position ( ~JSON; Quote ( ~key ) ; 1 ; 1 );
+        ~matchedDelimiter = Position ( ~JSON; ":" ; ~matchedKey; 1  );
+        ~matchedValueStart = Position ( ~JSON; "\""; ~matchedDelimiter + 1; 1 );
+        ~matchedValueEnd= Position ( ~JSON; "\""; ~matchedValueStart + 1 ; 1 );
+        ~theValue = Middle ( ~JSON ; ~matchedValueStart + 1 ; ~matchedValueEnd - ~matchedValueStart - 1 )
+    ];
+
+    List (
+        "Key End: " & ~matchedKey;
+        "Value Start :" & ~matchedValueStart;
+        "Value End :" & ~matchedValueEnd;
+        "Value: " & ~theValue;
+    )
+)
+*/

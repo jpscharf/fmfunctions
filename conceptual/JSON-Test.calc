@@ -1,0 +1,28 @@
+Let
+(
+    [
+        ~JSON = "{
+            \"myKey\":\"aVal\"
+        }";
+        ~JSONResults = JSON ( ~JSON; "set"; "myKey"; "myVal" );
+        ~keyStart = GetValue ( text.explode ( ","; ~JSONResults ) ; 1 );
+        ~keyEnd = GetValue ( text.explode ( ","; ~JSONResults ) ; 2 );
+        ~keyPositonReturn = Position ( ~JSONResults ; ¶ ; ~keyEnd ; 1 );
+        ~keyPositionIndex = Position (  ~JSON ; "¶" ; ~keyStart ; 1 )
+    ];
+
+    List
+    (
+        //text.explode ( ","; ~JSONResults );
+        "Index: " & ~keyPositionIndex;
+        
+        //GetValue ( text.explode ( ","; ~JSONResults  ) ; 2 );
+        //~keyPositionIndex;GetValue ( text.explode ( ","; ~JSONResults  ) ; 2 );
+        //GetValue ( text.explode ( ","; ~JSONResults  ) ; 2 );
+        "Key Positions: " & ~JSONResults;
+        "Key Start :" & $keyStart;
+        "Key End :" & ~keyEnd;
+        "Key Parsed: " & Middle ( ~JSON ; ~keyStart ; ~keyEnd - ~keyStart );
+        "JSON =>¶" & ~JSONResults
+    ) & text.explode  (","; ~JSONResults )
+)
