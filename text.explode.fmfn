@@ -15,6 +15,8 @@ References: Modeled after PHP's explode: http://us.php.net/manual/en/function.ex
 NOTE: If the provided delimiter is a ¶ the function will return the original text. Also,
 it will strip any existing ¶ as they would be ambiguous.
 
+WARNING: text.explode breaks when using COL + NUL (it strips out NULs)
+
 2016-05-01, JPS, Fixed bug with trailing delimiter breaking the function.
 2014-08-12, JPS, Returns are now encode as \¶ instead of being replaced with "".
 2013-01-23, JPS, Fixed a MAJOR bug that caused the function to break when the delimiterCount = 0 or when the delimiterLength > 1.
