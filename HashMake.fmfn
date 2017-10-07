@@ -1,0 +1,35 @@
+/*
+ * =====================================================
+ * @function HashMake ( password; key )
+ *
+ * @parameter password (string)
+ * @parameter key (string)
+ *
+ * @return string: The salted password.
+ *
+ * @category Hashing
+ *
+ * @version 1.0
+ *
+ * @dependencies RandomString
+ *
+ * @purpose Created a salted pasword hash.
+ *
+ *
+ * @changes
+ * 2017-10-07, Jason Scharf, Created.
+ * @/changes
+ * =====================================================
+ */
+
+
+Let(
+  [
+    ~salt_characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
+    ~salt = RandomString(~salt_characters; 16);
+    ~salted_password = ~salt & password;
+    ~hashed_password = Base64EncodeRFC( 3548; CryptAuthCode ( ~salted_password ; "SHA512" ; key ))
+  ];
+
+  ~salt & "$" & ~hashed_password
+)
