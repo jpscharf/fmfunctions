@@ -1,0 +1,36 @@
+/*
+ * =====================================================
+ * @function HashMake ( password; hashed_password; key )
+ *
+ * @parameter password (string)
+ * @parameter hashed_password (string)
+ * @parameter key (string)
+ *
+ * @return boolean.
+ *
+ * @category Hashing
+ *
+ * @version 1.0
+ *
+ * @dependencies text.explode, HashMake
+ *
+ * @purpose Check a password against a salted password.
+ *
+ *
+ * @changes
+ * 2017-10-07, Jason Scharf, Created.
+ * @/changes
+ * =====================================================
+ */
+
+
+Let(
+  [
+    ~hashed_password_parts = text.explode("$"; hashed_password);
+    ~salt = GetValue(~hashed_password_parts; 1 );
+    ~salted_password = ~salt & password;
+    ~check = ~salt & "$" & Base64EncodeRFC( 3548; CryptAuthCode ( ~salted_password ; "SHA512" ; key ))
+  ];
+
+  hashed_password = ~check
+)
