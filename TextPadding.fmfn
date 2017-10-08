@@ -1,0 +1,44 @@
+/*
+ * @signature: TextPadding ( text ; padChar ; padLength ; alignment )
+ *
+ * @source: (original) http://www.briandunning.com/cf/776
+ *
+ * @author: Jason Scharf & Fabrice Nordmann
+ * 
+ * @changelog: v.2, October 2017, Added centering
+* @changelog: v.1, Nov 2007 (original by Fabrice Nordmann)
+ *
+ * @description: Pads a string on a given length, left or right. Not recursive.
+ *
+ * @example: TextPadding ( "James" ; "+-" ; 10 ; "Left" )  --> "James+-+-+"
+ * @example: TextPadding ( "45.52" ; "." ; 15 ; "Right" )   --> "..........45.52"
+**/
+Let (
+  [ 
+    ~padding = Substitute ( ( 10  ^  padLength ) - 1 ; 9 ; padChar );
+    ~alignment = Case (
+      alignment = "right" or alignment = "r";
+        "R";
+      
+      alignment = "left" or alignment = "l";
+        "L";
+
+      alignment = "center" or alignment = "c";
+        "C";
+
+      /* DEFAULT */
+        "C"
+    )
+  ];
+
+  Case (
+    ~alignment = "L";
+      Left ( text & ~padding ; padLength ) ;
+
+    ~alignment = "R"; 
+      Right ( ~padding & text ; padLength );
+
+    /* DEFAULT - Center */
+        Left(Left(~padding; (padLength / 2) - (Length(text)/2)) & text & ~padding; padLength)
+  )
+)
