@@ -1,0 +1,28 @@
+/*
+ * @signature: GFFN ( field )
+ *
+ * @source: (base on) [Kevin Frank] https://filemakerhacks.com/2012/05/13/fm-12-executesql-robust-coding-part-1/
+ *
+ * @author: Jason P. Scharf <jason.scharf@intergrated.net>
+ * 
+ * @changelog: v1.0.0, 2018-03-02, Added.
+ *
+ * @description: Returns only the name of the field prefixed with the table,
+ *   as opposed to GetFieldName() which also returns the relationship. This is 
+ *   to be used in SQL queries to protect the field references from breaking if
+ *   the field is renamed. The Quote() function "escapes" problematical
+ *   characters and SQL reserved words, if any -- otherwise, no harm done.
+ *
+ * @example: GFFN (table::field)  --> "Table"."Field"
+**/
+Let ( 
+  [ 
+    ~fqfn = GetFieldName ( field ); 
+    ~fqfn_parts = Substitute ( ~fqfn ; "::" ; ¶ );
+    ~table = Quote(GetValue(~fqfn_parts; 1));
+    ~field = Quote(GetValue(~fqfn_parts; 2));
+    ~gfna = ~table& "." & ~field
+] ; 
+
+  ~gfna
+)
